@@ -68,60 +68,34 @@ local function print_event_virt(lane_nr, evt)
 	local pos = evt.pos
 	local char = evt.char
 	local hl_group = evt.hl_group
+	local extmark_id = state.extmarks[pos][lane_nr]
 
+	local extmark = {}
 	if not char or not hl_group then
-		return
+		extmark = vim.api.nvim_buf_get_extmark_by_id(state.bufid, coloursets.ns_id, extmark_id, { details = true })[3]
+	end
+
+	if not char then
+		char = extmark.virt_text[1][1]
+	end
+
+	if not hl_group then
+		hl_group = extmark.virt_text[1][2]
 	end
 
 	if char == "" then
 		char = " " -- replace character with space
 	end
 
-	vim.api.nvim_buf_del_extmark(state.bufid, coloursets.ns_id, state.extmarks[pos][lane_nr])
+	vim.api.nvim_buf_del_extmark(state.bufid, coloursets.ns_id, extmark_id)
 
 	vim.api.nvim_buf_set_extmark(state.bufid, coloursets.ns_id, pos - 1, lane_nr, {
 		end_line = pos - 1,
 		end_col = lane_nr + 1,
 		virt_text = { { char, hl_group } },
 		virt_text_win_col = lane_nr,
-		-- virt_text_pos = "overlay",
-		id = state.extmarks[pos][lane_nr],
+		id = extmark_id,
 	})
-end
-
-local function print_event(lane_nr, evt)
-	local pos = evt.pos
-	local char = evt.char
-	local hl_group = evt.hl_group
-
-	if not char and not hl_group then
-		return
-	end
-
-	if char then
-		if char == "" then
-			char = " " -- replace character with space
-		end
-		local f = function()
-			vim.api.nvim_buf_set_text(state.bufid, pos - 1, lane_nr, pos - 1, lane_nr + 1, { [1] = char })
-		end
-		-- TODO: prevent error notifications when buffer is closed
-		-- vim.schedule(f)
-		f()
-	end
-
-	if hl_group then
-		local f = function()
-			vim.api.nvim_buf_set_extmark(state.bufid, coloursets.ns_id, pos - 1, lane_nr, {
-				end_line = pos - 1,
-				end_col = lane_nr + 1,
-				hl_group = hl_group,
-			})
-		end
-		-- TODO: prevent error notifications when buffer is closed
-		-- vim.schedule(f)
-		f()
-	end
 end
 
 local function update_lanes()

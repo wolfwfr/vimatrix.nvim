@@ -1,10 +1,18 @@
+local name = "vimatrix"
+
 local vimatrix = function()
 	local conf = require("config").Defaults
 
-	local alphs = ""
+	if #conf.alphabet == 0 then
+		vim.notify(name .. " could not find alphabet, please check your config")
+		return
+	end
+	-- if you find an index out of range here, then you misconfigured alphabet
+	local alphs = conf.alphabet[1]
+	conf.alphabet[1] = nil
 	for _, a in pairs(conf.alphabet) do
-		for _, l in pairs(a) do
-			alphs = alphs .. l
+		for _, e in pairs(a) do
+			table.insert(alphs, e)
 		end
 	end
 
@@ -13,7 +21,7 @@ local vimatrix = function()
 	require("alphabet.provider").init({ alphabet = alphs, randomize_on_init = true, randomize_on_pick = false }) --TODO: make configurable
 
 	local bufid = require("buffer").Open()
-	require("insert_vimatrix").insert(bufid)
+	require("vimatrix").insert(bufid)
 end
 
 local reset = function()

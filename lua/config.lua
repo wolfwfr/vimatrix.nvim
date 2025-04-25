@@ -9,7 +9,7 @@ local defaults = {
 		body = { "#27b427", "#1b671b", "#138c13" }, -- various green
 		tail = "#425842", -- greenish gray
 	},
-	alphabet = { alph.latin, alph.decimal, alph.symbols },
+	alphabet = { alph.katakana, alph.decimal, alph.symbols },
 	fps = 5,
 	chances = {
 		body_to_tail = 150,

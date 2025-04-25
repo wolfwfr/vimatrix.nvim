@@ -143,7 +143,6 @@ local function replace_tail_cell(lane)
 	local m = {
 		pos = lane.tail.pos,
 		char = "",
-		hl_group = coloursets.get_colour("body"), --FIXME: remove; testing here
 	}
 	for i, gl in ipairs(lane.glitch or {}) do
 		if gl.pos == m.pos then
@@ -167,7 +166,6 @@ local function advance_tail_cell(lane)
 
 	return as_array({
 		pos = lane.tail.pos,
-		char = alph.get_char(), --FIXME: remove; testing here
 		-- nil char signals no change to char
 		hl_group = lane.tail.hl_group,
 	})
