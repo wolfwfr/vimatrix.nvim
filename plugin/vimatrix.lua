@@ -8,18 +8,17 @@ local vimatrix = function()
 		return
 	end
 
-	local alphs = conf.alphabet[1]
-	for i, a in pairs(conf.alphabet) do
-		if i ~= 1 then
-			for _, e in pairs(a) do
-				table.insert(alphs, e)
-			end
+	-- flatten alphabet
+	local chars = {}
+	for _, a in pairs(conf.alphabet) do
+		for _, e in pairs(a) do
+			table.insert(chars, e)
 		end
 	end
 
 	require("colours.coloursets").Init(conf.colourset)
 	require("chances.chances").init(conf.chances)
-	require("alphabet.provider").init({ alphabet = alphs, randomize_on_init = true, randomize_on_pick = false }) --TODO: make configurable
+	require("alphabet.provider").init({ alphabet = chars, randomize_on_init = true, randomize_on_pick = false }) --TODO: make configurable
 	require("errors").init(conf.logging)
 
 	local bufid = require("buffer").Open()
