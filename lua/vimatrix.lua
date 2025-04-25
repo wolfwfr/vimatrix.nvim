@@ -64,6 +64,12 @@ local function setup_lanes(num_rows, num_cols)
 	end
 end
 
+local function print_error_and_stop(err)
+	-- TODO: print stack-trace
+	vim.notify("encountered an error:" .. err)
+	require("ticker.ticker").stop()
+end
+
 local function print_event_virt(lane_nr, evt)
 	local pos = evt.pos
 	local char = evt.char
@@ -72,7 +78,14 @@ local function print_event_virt(lane_nr, evt)
 
 	local extmark = {}
 	if not char or not hl_group then
-		extmark = vim.api.nvim_buf_get_extmark_by_id(state.bufid, coloursets.ns_id, extmark_id, { details = true })[3]
+		local ok, res =
+			pcall(vim.api.nvim_buf_get_extmark_by_id, state.bufid, coloursets.ns_id, extmark_id, { details = true })
+		if ok then
+			extmark = res[3]
+		else
+			print_error_and_stop(res)
+			return
+		end
 	end
 
 	if not char then
@@ -87,15 +100,23 @@ local function print_event_virt(lane_nr, evt)
 		char = " " -- replace character with space
 	end
 
-	vim.api.nvim_buf_del_extmark(state.bufid, coloursets.ns_id, extmark_id)
+	local ok, err = pcall(vim.api.nvim_buf_del_extmark, state.bufid, coloursets.ns_id, extmark_id)
+	if not ok then
+		print_error_and_stop(err)
+		return
+	end
 
-	vim.api.nvim_buf_set_extmark(state.bufid, coloursets.ns_id, pos - 1, lane_nr, {
+	local ok, err = pcall(vim.api.nvim_buf_set_extmark, state.bufid, coloursets.ns_id, pos - 1, lane_nr, {
 		end_line = pos - 1,
 		end_col = lane_nr + 1,
 		virt_text = { { char, hl_group } },
 		virt_text_win_col = lane_nr,
 		id = extmark_id,
 	})
+	if not ok then
+		print_error_and_stop(err)
+		return
+	end
 end
 
 local function update_lanes()
