@@ -7,18 +7,20 @@ local vimatrix = function()
 		vim.notify(name .. " could not find alphabet, please check your config")
 		return
 	end
-	-- if you find an index out of range here, then you misconfigured alphabet
+
 	local alphs = conf.alphabet[1]
-	conf.alphabet[1] = nil
-	for _, a in pairs(conf.alphabet) do
-		for _, e in pairs(a) do
-			table.insert(alphs, e)
+	for i, a in pairs(conf.alphabet) do
+		if i ~= 1 then
+			for _, e in pairs(a) do
+				table.insert(alphs, e)
+			end
 		end
 	end
 
 	require("colours.coloursets").Init(conf.colourset)
 	require("chances.chances").init(conf.chances)
 	require("alphabet.provider").init({ alphabet = alphs, randomize_on_init = true, randomize_on_pick = false }) --TODO: make configurable
+	require("errors").init(conf.logging)
 
 	local bufid = require("buffer").Open()
 	require("vimatrix").insert(bufid)
@@ -29,12 +31,12 @@ local reset = function()
 	package.loaded["buffer"] = nil
 	package.loaded["config"] = nil
 	package.loaded["colours.coloursets"] = nil
-	package.loaded["ticker.ticker"] = nil
+	package.loaded["ticker"] = nil
 	package.loaded["chances.chances"] = nil
 end
 
 local function stop_ticker()
-	require("ticker.ticker").stop()
+	require("ticker").stop()
 end
 
 vim.api.nvim_create_user_command("VimatrixOpen", function(cmd)

@@ -66,8 +66,8 @@ end
 
 local function print_error_and_stop(err)
 	-- TODO: print stack-trace
-	vim.notify("encountered an error:" .. err)
-	require("ticker.ticker").stop()
+	require("errors").print(err)
+	require("ticker").stop()
 end
 
 local function print_event_virt(lane_nr, evt)
@@ -138,7 +138,7 @@ M.insert = function(bufid)
 	setup_buffer_virt(num_rows, num_cols)
 	setup_lanes(num_rows, num_cols)
 
-	require("ticker.ticker").start(50, vim.schedule_wrap(update_lanes))
+	require("ticker").start(50, vim.schedule_wrap(update_lanes))
 end
 
 return M
