@@ -40,7 +40,7 @@ local defaults = {
 		randomize_on_pick = false,
 	},
 	chances = {
-		body_to_tail = -150,
+		body_to_tail = 150,
 		head_to_glitch = 150,
 		head_to_tail = 50,
 		empty_stay_empty = 2,
