@@ -1,19 +1,34 @@
+local built_in = require("vimatrix.alphabet.symbols")
+
 ---@class alphabet_provider
 local M = {}
 
 ---@class vx.alphabet_props
----@field symbols string[][] all characters available for printing
+---@field built_in string[]?
+---@field custom string[]?
 ---@field randomize_on_init boolean randomizes the given alphabet on initialization; possible performance hit on init
 ---@field randomize_on_pick boolean randomizes the chosen character on pick
 
 ---@param props vx.alphabet_props
+local function validate_and_fix(props)
+	if (not props.built_in or #props.built_in == 0) and (not props.custom or #props.custom == 0) then
+		vim.notify("vimatrix was configured with an empty alphabet, defaulting to 'latin'", vim.log.levels.WARN)
+		props.built_in = { "latin" }
+	end
+end
+
+---@param props vx.alphabet_props
 function M.init(props)
-	-- flatten alphabet
+	validate_and_fix(props)
+
 	local chars = {}
-	for _, a in pairs(props.symbols) do
-		for _, e in pairs(a) do
-			table.insert(chars, e)
+	for _, b in pairs(props.built_in) do
+		for _, s in pairs(built_in[b] or {}) do
+			table.insert(chars, s)
 		end
+	end
+	for _, s in pairs(props.custom or {}) do
+		table.insert(chars, s)
 	end
 
 	M.alphabet = chars

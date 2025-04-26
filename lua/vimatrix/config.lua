@@ -35,7 +35,7 @@ local defaults = {
 	},
 	colourscheme = "green",
 	alphabet = {
-		symbols = { alph.katakana, alph.decimal, alph.symbols },
+		built_in = { "katakana", "decimal", "symbols" },
 		randomize_on_init = true,
 		randomize_on_pick = false,
 	},
