@@ -2,14 +2,6 @@ local uv = vim.uv or vim.loop
 
 ---@class ticker
 local M = {}
---
--- local pp = {
--- 	i = 0,
--- }
--- function pp.print()
--- 	print(pp.i)
--- 	pp.i = pp.i + 1
--- end
 
 local state = {
 	stop_timer = false,
@@ -50,7 +42,5 @@ function M.start(interval, cb, max)
 		cb()
 	end)
 end
-
--- M.start(1000, pp.print, 12)
 
 return M

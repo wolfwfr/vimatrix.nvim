@@ -366,47 +366,4 @@ function M.new_lane(props)
 	return l
 end
 
--------------------------------------------------
---- DELETE ME ---
-
--- local l = M.new_lane({
--- 	height = 12,
--- 	upf = 1,
--- })
---
--- l.head = {
--- 	pos = 12,
--- 	char = "A",
--- }
---
--- -- l.glitch = {
--- -- 	[1] = {
--- -- 		pos = 6,
--- -- 		char = "X",
--- -- 	},
--- -- }
--- --
--- l.tail = {
--- 	pos = 2,
--- 	char = "C",
--- }
--- --
--- alph.init({ alphabet = "ABC", randomize_on_init = false, randomize_on_pick = false })
--- local conf = require("config").Defaults
--- coloursets.Init(conf.colourset)
--- require("chances.chances").init({
--- 	body_to_tail = -1,
--- 	head_to_glitch = -1,
--- 	head_to_tail = -1,
--- 	glitch_to_glitch = -1,
--- 	glitch_to_tail = -1,
--- 	empty_ignore_head = -1,
--- })
---
--- local evts = l:advance()
--- P(evts)
-
---- DELETE ME ---
--------------------------------------------------
-
 return M

@@ -16,8 +16,6 @@ function M.init(props)
 		end
 	end
 
-	-- P(chars)
-
 	M.alphabet = chars
 
 	if props.randomize_on_init then
