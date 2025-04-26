@@ -1,4 +1,5 @@
 local chances = require("vimatrix.config").options.chances
+local droplet_props = require("vimatrix.config").options.droplet
 local colourscheme = require("vimatrix.colours.provider")
 local alph = require("vimatrix.alphabet.provider")
 
@@ -27,6 +28,7 @@ local M = {}
 ---@field head cell
 ---@field tail cell
 ---@field glitches glitch[]
+---@field cleared boolean --works only as long as a lane can contain no more than one droplet at a time
 local lane = {}
 
 -- a droplet-event signifies a buffer change
@@ -62,7 +64,7 @@ end
 
 ---@return boolean
 function lane:ready_for_head()
-	return not self:has_tail() and not self:has_head() -- TODO: consider making configurable
+	return not self:has_tail() and not self:has_head() and self.cleared -- TODO: consider making configurable
 end
 
 ---@return boolean
@@ -171,6 +173,7 @@ local function advance_tail_cell(lane)
 	lane.tail.pos = lane.tail.pos + 1
 	if lane.tail.pos > lane.props.height then
 		lane.tail = nil
+    lane.cleared = true
 		return nil
 	end
 
@@ -187,7 +190,7 @@ end
 ---@return event[]?
 local function replace_body_cell(lane)
 	if
-		lane:has_head() and lane.head.pos >= lane.props.height - 5
+		droplet_props.max_size_offset > 0 and lane:has_head() and lane.head.pos >= lane.props.height - droplet_props.max_size_offset
 		or chances.body_to_tail > 0 and math.random(chances.body_to_tail) == 1
 	then
 		lane.tail = {
@@ -214,6 +217,7 @@ local function create_head_cell(lane)
 		char = alph.get_char(),
 		hl_group = colourscheme.get_colour("head")[1],
 	}
+  lane.cleared = false
 	return as_array({
 		pos = lane.head.pos,
 		char = lane.head.char,
@@ -224,11 +228,6 @@ end
 ---@param lane lane
 ---@return event[]?
 local function replace_glitch_cells(lane)
-	if not lane:has_head() and not lane:has_tail() then
-		lane.glitches = {}
-		return
-	end
-
 	local mutations = {}
 
 	for i, gl in ipairs(lane.glitches or {}) do
@@ -358,6 +357,7 @@ function M.new_lane(props)
 	local l = setmetatable({}, { __index = lane })
 	l.props = props
 	l.frame = 0
+  l.cleared = true
 	return l
 end
 

@@ -2,11 +2,14 @@ local alph = require("vimatrix.alphabet.symbols")
 
 local M = {}
 
----@class lane_timings
+---@class vx.lane_timings
 ---@field max_fps integer frames per second for the fastest lane
 ---@field fps_variance integer the number of different speeds to assign to the various lanes; each speed is equal to 'fps/random(1,fps_variance)'
 ---@field glitch_fps_divider integer glitch symbols update at a slower pace than the droplet's progression; lane_glitch_fps_divider defines the ratio; glitch updates equal 'lane_fps/lane_glitch_fps_divider';
 ---@field max_timeout integer maximum number of seconds that any lane can idle prior to printing its first droplet; timeout is randomized to random(1, max_timeout)
+---
+---@class vx.droplet
+---@field max_size_offset integer a positive value will force tail creation on a droplet when it has reached length == window_height - max_size_offset
 
 ---@class vx.chances
 ---@field body_to_tail integer
@@ -15,6 +18,7 @@ local M = {}
 ---@field empty_stay_empty integer --TODO: naming
 ---
 ---@class vx.config
+---@field timings vx.lane_timings
 ---@field colourscheme vimatrix.colour_scheme | string
 ---@field alphabet vx.alphabet_props
 ---@field chances vx.chances the chances of random events; each is a chance of 1 in x
@@ -25,6 +29,9 @@ local defaults = {
 		fps_variance = 2,
 		glitch_fps_divider = 5,
 		max_timeout = 200,
+	},
+	droplet = {
+		max_size_offset = 5,
 	},
 	colourscheme = "green",
 	alphabet = {
