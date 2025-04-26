@@ -25,8 +25,7 @@ local defaults = {
 	chances = {
 		body_to_tail = 150,
 		head_to_glitch = 150,
-		head_to_tail = -1,
-		empty_ignore_head = -1,
+		head_to_tail = 50,
 		empty_stay_empty = 2,
 	},
 	logging = {

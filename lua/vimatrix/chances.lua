@@ -14,7 +14,6 @@ local M = {}
 ---@field body_to_tail integer
 ---@field head_to_glitch integer
 ---@field head_to_tail integer
----@field empty_ignore_head integer --TODO: naming
 ---@field empty_stay_empty integer --TODO: naming
 
 ---@param chances vx.chances
