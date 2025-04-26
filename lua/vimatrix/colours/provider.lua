@@ -19,28 +19,38 @@ local M = {}
 local ns_id = vim.api.nvim_create_namespace("Vimatrix")
 M.ns_id = ns_id
 
----@class vimatrix.Colourset
+---@class vimatrix.colour_scheme
 ---@field head string hex colourcode
 ---@field body string[] hex colourcodes for body characters, no particular order
 ---@field tail string hex colourcode for the tail character
 ---@field glitch? string[] hex colourcodes for glitching characters -- TODO: implement
 
----@param set vimatrix.Colourset
-function M.Init(set)
-	M.set = set
+---@param scheme_props vimatrix.colour_scheme | string
+function M.Init(scheme_props)
+	local scheme = scheme_props
+	if type(scheme_props) == "string" then
+		scheme = require("vimatrix.colours.schemes")[scheme_props]
+		if not scheme then
+			local default = "green"
+			vim.notify("colour_scheme '" .. scheme_props .. "' not found; defaulting to '" .. default .. "'")
+			scheme = require("vimatrix.colours.schemes")[default]
+		end
+	end
+
+	M.set = scheme
 
 	local hl_groups = {
-		Head = { fg = set.head },
-		Tail = { fg = set.tail },
+		Head = { fg = scheme.head },
+		Tail = { fg = scheme.tail },
 	}
-	for i = 1, #set.body do
+	for i = 1, #scheme.body do
 		local key = "Body" .. i
-		hl_groups[key] = { fg = set.body[i] }
+		hl_groups[key] = { fg = scheme.body[i] }
 	end
-	if set.glitch ~= nil then
-		for i = 1, #set.glitch do
+	if scheme.glitch ~= nil then
+		for i = 1, #scheme.glitch do
 			local key = "Glitch" .. i
-			hl_groups[key] = { fg = set.glitch[i] }
+			hl_groups[key] = { fg = scheme.glitch[i] }
 		end
 	end
 

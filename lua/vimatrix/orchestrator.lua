@@ -1,5 +1,5 @@
-local lanes = require("droplet_lane.droplet_lane")
-local coloursets = require("colours.coloursets")
+local lanes = require("vimatrix.droplet_lane")
+local coloursets = require("vimatrix.colours.provider")
 
 local M = {}
 
@@ -66,8 +66,8 @@ end
 
 local function print_error_and_stop(err)
 	-- TODO: print stack-trace
-	require("errors").print(err)
-	require("ticker").stop()
+	require("vimatrix.errors").print(err)
+	require("vimatrix.ticker").stop()
 end
 
 local function print_event_virt(lane_nr, evt)
@@ -88,13 +88,8 @@ local function print_event_virt(lane_nr, evt)
 		end
 	end
 
-	if not char then
-		char = extmark.virt_text[1][1]
-	end
-
-	if not hl_group then
-		hl_group = extmark.virt_text[1][2]
-	end
+	char = char or extmark.virt_text[1][1]
+	hl_group = hl_group or extmark.virt_text[1][2]
 
 	if char == "" then
 		char = " " -- replace character with space
@@ -138,7 +133,7 @@ M.insert = function(bufid)
 	setup_buffer_virt(num_rows, num_cols)
 	setup_lanes(num_rows, num_cols)
 
-	require("ticker").start(50, vim.schedule_wrap(update_lanes))
+	require("vimatrix.ticker").start(50, vim.schedule_wrap(update_lanes))
 end
 
 return M

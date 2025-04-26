@@ -1,19 +1,29 @@
 ---@class alphabet_provider
 local M = {}
 
----@class props
----@field alphabet string[] all characters available for printing
+---@class vx.alphabet_props
+---@field symbols string[][] all characters available for printing
 ---@field randomize_on_init boolean randomizes the given alphabet on initialization; possible performance hit on init
 ---@field randomize_on_pick boolean randomizes the chosen character on pick
 
 math.randomseed(os.time())
 
----@param props props
+---@param props vx.alphabet_props
 function M.init(props)
-	M.alphabet = props.alphabet
+	-- flatten alphabet
+	local chars = {}
+	for _, a in pairs(props.symbols) do
+		for _, e in pairs(a) do
+			table.insert(chars, e)
+		end
+	end
+
+	-- P(chars)
+
+	M.alphabet = chars
 
 	if props.randomize_on_init then
-		local rem = props.alphabet
+		local rem = chars
 		local rpl = {}
 		while #rem > 0 do
 			local i = math.random(#rem)

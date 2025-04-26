@@ -10,14 +10,14 @@ local M = {}
 -- - glitch -> body
 -- - tail -> empty
 --
----@class chances
+---@class vx.chances
 ---@field body_to_tail integer
 ---@field head_to_glitch integer
 ---@field head_to_tail integer
 ---@field empty_ignore_head integer --TODO: naming
 ---@field empty_stay_empty integer --TODO: naming
 
----@param chances chances
+---@param chances vx.chances
 function M.init(chances)
 	M.initialised = true
 	M.chances = chances

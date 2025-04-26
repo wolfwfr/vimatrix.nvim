@@ -1,6 +1,6 @@
-local ch = require("chances.chances")
-local coloursets = require("colours.coloursets")
-local alph = require("alphabet.provider")
+local ch = require("vimatrix.chances")
+local coloursets = require("vimatrix.colours.provider")
+local alph = require("vimatrix.alphabet.provider")
 
 local M = {}
 
