@@ -8,6 +8,12 @@ local M = {}
 ---@field glitch_fps_divider integer glitch symbols update at a slower pace than the droplet's progression; lane_glitch_fps_divider defines the ratio; glitch updates equal 'lane_fps/lane_glitch_fps_divider';
 ---@field max_timeout integer maximum number of seconds that any lane can idle prior to printing its first droplet; timeout is randomized to random(1, max_timeout)
 
+---@class vx.chances
+---@field body_to_tail integer
+---@field head_to_glitch integer
+---@field head_to_tail integer
+---@field empty_stay_empty integer --TODO: naming
+---
 ---@class vx.config
 ---@field colourscheme vimatrix.colour_scheme | string
 ---@field alphabet vx.alphabet_props

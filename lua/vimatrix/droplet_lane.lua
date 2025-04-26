@@ -1,4 +1,4 @@
-local ch = require("vimatrix.chances")
+local chances = require("vimatrix.config").options.chances
 local colourscheme = require("vimatrix.colours.provider")
 local alph = require("vimatrix.alphabet.provider")
 
@@ -102,7 +102,7 @@ local function replace_head_cell(lane)
 
 	-- convenience: only simple body cells at the top, no glitches
 	if lane:has_head_at_top() then
-		if ch.chances.head_to_tail > 0 and math.random(ch.chances.head_to_tail) == 1 then
+		if chances.head_to_tail > 0 and math.random(chances.head_to_tail) == 1 then
 			lane.tail = {
 				pos = lane.head.pos,
 				char = char,
@@ -116,7 +116,7 @@ local function replace_head_cell(lane)
 		end
 	end
 
-	if ch.chances.head_to_glitch > 0 and math.random(ch.chances.head_to_glitch) == 1 then
+	if chances.head_to_glitch > 0 and math.random(chances.head_to_glitch) == 1 then
 		local gl = new_glitch(lane.head.pos)
 		local ar = lane.glitches or {}
 		table.insert(ar, gl)
@@ -188,7 +188,7 @@ end
 local function replace_body_cell(lane)
 	if
 		lane:has_head() and lane.head.pos >= lane.props.height - 5
-		or ch.chances.body_to_tail > 0 and math.random(ch.chances.body_to_tail) == 1
+		or chances.body_to_tail > 0 and math.random(chances.body_to_tail) == 1
 	then
 		lane.tail = {
 			pos = 1,
@@ -206,7 +206,7 @@ end
 ---@param lane lane
 ---@return event[]?
 local function create_head_cell(lane)
-	if ch.chances.empty_stay_empty > 0 and math.random(ch.chances.empty_stay_empty) == 1 then
+	if chances.empty_stay_empty > 0 and math.random(chances.empty_stay_empty) == 1 then
 		return
 	end
 	lane.head = {

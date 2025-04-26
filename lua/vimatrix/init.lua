@@ -13,7 +13,6 @@ local reset = function()
 	package.loaded["config"] = nil
 	package.loaded["colours.colourscheme"] = nil
 	package.loaded["ticker"] = nil
-	package.loaded["chances"] = nil
 	package.loaded["errors"] = nil
 	package.loaded["orchestrator"] = nil
 end
@@ -28,7 +27,6 @@ local vimatrix = function()
 	local conf = require("vimatrix.config").options
 
 	require("vimatrix.colours.provider").Init(conf.colourscheme)
-	require("vimatrix.chances").init(conf.chances)
 	require("vimatrix.alphabet.provider").init(conf.alphabet)
 	require("vimatrix.errors").init(conf.logging)
 
