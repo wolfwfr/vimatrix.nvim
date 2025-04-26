@@ -41,6 +41,7 @@ end
 ---@param max integer? stops timer after this many cycles [optional]
 function M.start(interval, cb, max)
 	state.stop_timer = false
+	state.counter = 0
 	M.timer:start(0, interval, function()
 		if should_stop(max) then
 			M.timer:stop()

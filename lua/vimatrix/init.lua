@@ -13,11 +13,12 @@ end
 local reset = function()
 	package.loaded["vimatrix"] = nil
 	package.loaded["buffer"] = nil
-	package.loaded["vx.config"] = nil
+	package.loaded["config"] = nil
 	package.loaded["colours.colourscheme"] = nil
 	package.loaded["ticker"] = nil
 	package.loaded["chances"] = nil
 	package.loaded["errors"] = nil
+	package.loaded["orchestrator"] = nil
 end
 
 local function stop_ticker()
@@ -31,7 +32,7 @@ local vimatrix = function()
 
 	require("vimatrix.colours.provider").Init(conf.colourscheme)
 	require("vimatrix.chances").init(conf.chances)
-	require("vimatrix.alphabet.provider").init(conf.alphabet) --TODO: make configurable
+	require("vimatrix.alphabet.provider").init(conf.alphabet)
 	require("vimatrix.errors").init(conf.logging)
 
 	local bufid = require("vimatrix.buffer").Open()

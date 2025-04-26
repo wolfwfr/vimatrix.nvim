@@ -23,7 +23,8 @@ M.ns_id = ns_id
 ---@field head string hex colourcode
 ---@field body string[] hex colourcodes for body characters, no particular order
 ---@field tail string hex colourcode for the tail character
----@field glitch? string[] hex colourcodes for glitching characters -- TODO: implement
+---@field glitch_bright string? hex colourcode for glitching characters upon change
+---@field glitch? string[] hex colourcodes for glitching characters
 
 ---@param scheme_props vimatrix.colour_scheme | string
 function M.Init(scheme_props)
@@ -47,7 +48,10 @@ function M.Init(scheme_props)
 		local key = "Body" .. i
 		hl_groups[key] = { fg = scheme.body[i] }
 	end
-	if scheme.glitch ~= nil then
+	if scheme.glitch_bright then
+		hl_groups.GlitchBright = { fg = scheme.glitch_bright }
+	end
+	if scheme.glitch then
 		for i = 1, #scheme.glitch do
 			local key = "Glitch" .. i
 			hl_groups[key] = { fg = scheme.glitch[i] }
@@ -65,6 +69,7 @@ local segments = {
 	body = "body",
 	tail = "tail",
 	glitch = "glitch",
+	glitch_bright = "glitch_bright",
 }
 
 M.segments = segments
@@ -82,10 +87,14 @@ function M.get_next_body()
 	return "VimatrixDropletBody" .. M.body_idx
 end
 
----@return string
+---@class highlight_group_response
+---@field hlg string
+---@field fallback boolean
+
+---@return highlight_group_response
 function M.get_next_glitch()
 	if #(M.set.glitch or {}) == 0 then
-		return M.get_next_body()
+		return { M.get_next_body(), true }
 	end
 
 	M.glitch_idx = M.glitch_ix or 0
@@ -96,22 +105,34 @@ function M.get_next_glitch()
 		M.glitch_idx = 1
 	end
 
-	return "VimatrixDropletGlitch" .. M.body_idx
+	return { "VimatrixDropletGlitch" .. M.body_idx, false }
+end
+
+---@return highlight_group_response
+function M.get_glitch_bright()
+	if not M.set.glitch_bright then
+		return { M.get_next_glitch().hlg, true }
+	end
+	return { "VimatrixDropletGlitchBright", false }
 end
 
 ---@param seg droplet_segment
+---@return highlight_group_response
 function M.get_colour(seg)
 	if seg == segments.body then
-		return M.get_next_body()
+		return { M.get_next_body(), false }
 	end
 	if seg == segments.head then
-		return "VimatrixDropletHead"
+		return { "VimatrixDropletHead", false }
 	end
 	if seg == segments.tail then
-		return "VimatrixDropletTail"
+		return { "VimatrixDropletTail", false }
 	end
 	if seg == segments.glitch then
 		return M.get_next_glitch()
+	end
+	if seg == segments.glitch_bright then
+		return M.get_glitch_bright()
 	end
 end
 

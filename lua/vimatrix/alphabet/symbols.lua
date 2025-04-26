@@ -1,7 +1,7 @@
 local M = {}
 
 -- half-width katakana
--- on arch-linux, install with `extra/ttf-sazanami` (pacman)
+-- on arch-linux, e.g. install with `extra/ttf-sazanami` (pacman)
 M.katakana = {
 	"ｦ",
 	"ｧ",

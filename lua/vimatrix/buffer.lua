@@ -27,9 +27,6 @@ local winopts = {
 
 ---@return integer buffer_id
 function M.Open()
-	--vim.cmd("botright vsplit")
-	-- vim.api.nvim_open_win(buffer, enter, config)
-	-- require("insert_middle").insert_middle("B")
 	local bufid = vim.api.nvim_create_buf(false, true)
 	vim.api.nvim_buf_set_name(bufid, "vimatrix")
 	vim.api.nvim_set_current_buf(bufid)

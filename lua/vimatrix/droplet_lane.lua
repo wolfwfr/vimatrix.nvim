@@ -1,5 +1,5 @@
 local ch = require("vimatrix.chances")
-local coloursets = require("vimatrix.colours.provider")
+local colourscheme = require("vimatrix.colours.provider")
 local alph = require("vimatrix.alphabet.provider")
 
 local M = {}
@@ -15,13 +15,18 @@ local M = {}
 ---@field char string --single character
 ---@field hl_group string
 
+---@class glitch
+---@field cell cell
+---@field frame integer
+---@field is_bright boolean
+
 ---@class lane
 ---@field props lane_props
 ---@field timeout_counter integer
 ---@field frame integer
 ---@field head cell
 ---@field tail cell
----@field glitch cell[]
+---@field glitches glitch[]
 local lane = {}
 
 -- a droplet-event signifies a buffer change
@@ -62,11 +67,28 @@ end
 
 ---@return boolean
 function lane:has_glitch()
-	return self.glitch ~= nil and #self.glitch > 0
+	return self.glitches ~= nil and #self.glitches > 0
 end
 
 local function as_array(obj)
 	return { obj }
+end
+
+---@param pos integer
+---@return glitch
+local function new_glitch(pos)
+	local br = colourscheme.get_colour("glitch_bright")
+	local is_bright = not br[2]
+
+	return {
+		cell = {
+			pos = pos,
+			char = alph.get_char(),
+			hl_group = br[1],
+		},
+		frame = 0,
+		is_bright = is_bright,
+	}
 end
 
 ---@param lane lane
@@ -84,7 +106,7 @@ local function replace_head_cell(lane)
 			lane.tail = {
 				pos = lane.head.pos,
 				char = char,
-				hl_group = coloursets.get_colour("tail"),
+				hl_group = colourscheme.get_colour("tail")[1],
 			}
 			return as_array({
 				pos = lane.tail.pos,
@@ -95,20 +117,16 @@ local function replace_head_cell(lane)
 	end
 
 	if ch.chances.head_to_glitch > 0 and math.random(ch.chances.head_to_glitch) == 1 then
-		local gl = {
-			pos = lane.head.pos,
-			char = alph.get_char(),
-			hl_group = coloursets.get_colour("glitch"),
-		}
-		local ar = lane.glitch or {}
-		table.insert(ar, #ar, gl)
-		lane.glitch = ar
-		return as_array(gl)
+		local gl = new_glitch(lane.head.pos)
+		local ar = lane.glitches or {}
+		table.insert(ar, gl)
+		lane.glitches = ar
+		return as_array(gl.cell)
 	end
 	return as_array({
 		pos = lane.head.pos,
 		char = char,
-		hl_group = coloursets.get_colour("body"),
+		hl_group = colourscheme.get_colour("body")[1],
 	})
 end
 
@@ -127,7 +145,8 @@ local function advance_head_cell(lane)
 	end
 
 	lane.head.char = alph.get_char()
-	lane.head.hl_group = coloursets.get_colour("head")
+	lane.head.hl_group = colourscheme.get_colour("head")[1]
+
 	return as_array({
 		pos = lane.head.pos,
 		char = lane.head.char,
@@ -142,9 +161,9 @@ local function replace_tail_cell(lane)
 		pos = lane.tail.pos,
 		char = "",
 	}
-	for i, gl in ipairs(lane.glitch or {}) do
-		if gl.pos == m.pos then
-			table.remove(lane.glitch, i)
+	for i, gl in ipairs(lane.glitches or {}) do
+		if gl.cell.pos == m.pos then
+			table.remove(lane.glitches, i)
 			break
 		end
 	end
@@ -160,7 +179,7 @@ local function advance_tail_cell(lane)
 		return nil
 	end
 
-	lane.tail.hl_group = coloursets.get_colour("tail")
+	lane.tail.hl_group = colourscheme.get_colour("tail")[1]
 
 	return as_array({
 		pos = lane.tail.pos,
@@ -179,7 +198,7 @@ local function replace_body_cell(lane)
 		lane.tail = {
 			pos = 1,
 			char = alph.get_char(),
-			hl_group = coloursets.get_colour("tail"),
+			hl_group = colourscheme.get_colour("tail")[1],
 		}
 		return as_array({
 			pos = lane.tail.pos,
@@ -198,7 +217,7 @@ local function create_head_cell(lane)
 	lane.head = {
 		pos = 1,
 		char = alph.get_char(),
-		hl_group = coloursets.get_colour("head"),
+		hl_group = colourscheme.get_colour("head")[1],
 	}
 	return as_array({
 		pos = lane.head.pos,
@@ -207,45 +226,42 @@ local function create_head_cell(lane)
 	})
 end
 
---TODO: impl
 ---@param lane lane
 ---@return event[]?
 local function replace_glitch_cells(lane)
 	if not lane:has_head() and not lane:has_tail() then
-		lane.glitch = {}
+		lane.glitches = {}
 		return
 	end
-	local ms = {}
-	for i, gl in ipairs(lane.glitch or {}) do
-		local gln = {
-			pos = gl.pos,
-			char = alph.get_char(),
-			hl_group = coloursets.get_colour("glitch"),
-		}
-		local tail_pos = -1
-		local head_pos = lane.props.height + 1
-		if lane:has_tail() then
-			tail_pos = lane.tail.pos
-		end
-		if lane:has_head() then
-			head_pos = lane.head.pos
-		end
-		if gln.pos > tail_pos and gln.pos < head_pos then
-			lane.glitch[i] = gln
-			table.insert(ms, gln)
-		else
-			lane.glitch[i] = nil
-		end
-	end
-	return ms
-end
 
--- TODO: implement
----@param lane lane
----@return boolean
-local function should_skip_glitch(lane)
-	lane.frame = lane.frame + 1 --side effect
-	return lane.frame % lane.props.fpu ~= 0
+	local mutations = {}
+
+	for i, gl in ipairs(lane.glitches or {}) do
+		local refresh_eligible = (gl.frame + 1) % lane.props.fpu_glitch == 0
+
+		if refresh_eligible then
+			local gln = new_glitch(gl.cell.pos)
+			lane.glitches[i] = gln
+			table.insert(mutations, gln.cell)
+			goto continue
+		end
+
+		if gl.is_bright then
+			lane.glitches[i].cell.hl_group = colourscheme.get_colour("glitch")[1]
+			lane.glitches[i].is_bright = false
+
+			table.insert(mutations, {
+				pos = lane.glitches[i].cell.pos,
+				hl_group = lane.glitches[i].cell.hl_group,
+			})
+		end
+
+		lane.glitches[i].frame = lane.glitches[i].frame + 1
+
+		::continue::
+	end
+
+	return mutations
 end
 
 ---@param lane lane
@@ -267,7 +283,7 @@ local function await_timeout(lane)
 		return false
 	end
 
-	-- BUG:fix harmless but unintended side-effect from should_skip
+	-- FIXME:harmless but unintended side-effect from should_skip
 	if not should_skip(lane) then
 		lane.timeout_counter = lane.timeout_counter + 1
 	end
