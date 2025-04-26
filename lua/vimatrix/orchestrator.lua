@@ -15,7 +15,7 @@ local state = {
 --- @param n integer number of spaces
 local space = function(n)
 	local line_chars = ""
-	for i = 1, n + 1 do
+	for i = 1, n do
 		line_chars = line_chars .. " "
 	end
 	return line_chars
@@ -26,11 +26,9 @@ end
 local function setup_buffer_virt(num_rows, num_cols)
 	for i = 1, num_rows do
 		for j = 1, num_cols do
-			local id = vim.api.nvim_buf_set_extmark(state.bufid, coloursets.ns_id, i - 1, j, {
-				end_line = i - 1,
-				end_col = j + 1,
+			local id = vim.api.nvim_buf_set_extmark(state.bufid, coloursets.ns_id, i - 1, j - 1, {
 				virt_text = { { " ", "VimatrixDropletBody1" } },
-				virt_text_win_col = j,
+				virt_text_win_col = j - 1,
 				virt_text_pos = "overlay",
 			})
 			local row = state.extmarks[i] or {}
@@ -54,8 +52,8 @@ end
 ---@param num_rows integer number of character cells in each lane
 ---@param num_cols integer number of lanes to setup
 local function setup_lanes(num_rows, num_cols)
-	-- num_cols = 2
-	for i = 1, num_cols - 1 do
+	-- num_cols = 1
+	for i = 1, num_cols do
 		state.lanes[i] = lanes.new_lane({
 			height = num_rows,
 			fpu = math.random(config.n_of_lane_speeds),
@@ -98,11 +96,9 @@ local function print_event_virt(lane_nr, evt)
 		return
 	end
 
-	local ok, err = pcall(vim.api.nvim_buf_set_extmark, state.bufid, coloursets.ns_id, pos - 1, lane_nr, {
-		end_line = pos - 1,
-		end_col = lane_nr + 1,
+	local ok, err = pcall(vim.api.nvim_buf_set_extmark, state.bufid, coloursets.ns_id, pos - 1, lane_nr - 1, {
 		virt_text = { { char, hl_group } },
-		virt_text_win_col = lane_nr,
+		virt_text_win_col = lane_nr - 1,
 		id = extmark_id,
 	})
 	if not ok then
