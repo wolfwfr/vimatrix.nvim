@@ -27,7 +27,6 @@ local function setup_buffer_virt(num_rows, num_cols)
 	for i = 1, num_rows do
 		for j = 1, num_cols do
 			local id = vim.api.nvim_buf_set_extmark(state.bufid, coloursets.ns_id, i - 1, j - 1, {
-				virt_text = { { " ", "VimatrixDropletBody1" } },
 				virt_text_win_col = j - 1,
 				virt_text_pos = "overlay",
 			})

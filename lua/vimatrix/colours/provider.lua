@@ -1,23 +1,13 @@
----@alias hl table<string, string|vim.api.keyset.highlight>
-
---- Ensures the hl groups are always set, even after a colorscheme change.
----@param ns_id integer
----@param groups hl
----@param opts? { prefix?:string, default?:boolean, managed?:boolean }
-local function set_hl(ns_id, groups, opts)
-	opts = opts or {}
-	for hl_group, hl in pairs(groups) do
-		hl_group = opts.prefix and opts.prefix .. hl_group or hl_group
-		hl = type(hl) == "string" and { link = hl } or hl --[[@as vim.api.keyset.highlight]]
-		hl.default = opts.default
-		vim.api.nvim_set_hl(ns_id, hl_group, hl)
-	end
-end
-
 local M = {}
 
-local ns_id = vim.api.nvim_create_namespace("Vimatrix")
-M.ns_id = ns_id
+M.ns_id = vim.api.nvim_create_namespace("Vimatrix")
+
+local hl_group_prefix = "VimatrixDroplet"
+local hl_group_head_segment = "Head"
+local hl_group_body_segment = "Body"
+local hl_group_tail_segment = "Tail"
+local hl_group_glitch_segment = "Glitch"
+local hl_group_glitch_bright_segment = "GlitchBright"
 
 ---@class vimatrix.colour_scheme
 ---@field head string hex colourcode
@@ -38,29 +28,30 @@ function M.Init(scheme_props)
 		end
 	end
 
-	M.set = scheme
+	M.scheme = scheme
 
 	local hl_groups = {
 		Head = { fg = scheme.head },
 		Tail = { fg = scheme.tail },
 	}
 	for i = 1, #scheme.body do
-		local key = "Body" .. i
-		hl_groups[key] = { fg = scheme.body[i] }
+		hl_groups[hl_group_body_segment .. i] = { fg = scheme.body[i] }
 	end
 	if scheme.glitch_bright then
-		hl_groups.GlitchBright = { fg = scheme.glitch_bright }
+		hl_groups[hl_group_glitch_bright_segment] = { fg = scheme.glitch_bright }
 	end
 	if scheme.glitch then
 		for i = 1, #scheme.glitch do
-			local key = "Glitch" .. i
-			hl_groups[key] = { fg = scheme.glitch[i] }
+			hl_groups[hl_group_glitch_segment .. i] = { fg = scheme.glitch[i] }
 		end
 	end
 
-	set_hl(ns_id, hl_groups, { prefix = "VimatrixDroplet" })
+	for hl_group, hl in pairs(hl_groups) do
+		hl_group = hl_group_prefix .. hl_group
+		vim.api.nvim_set_hl(M.ns_id, hl_group, hl)
+	end
 
-	vim.api.nvim_set_hl_ns(ns_id)
+	vim.api.nvim_set_hl_ns(M.ns_id)
 end
 
 ---@enum (key) droplet_segment
@@ -80,11 +71,11 @@ function M.get_next_body()
 
 	M.body_idx = M.body_idx + 1
 
-	if M.body_idx > #M.set.body then
+	if M.body_idx > #M.scheme.body then
 		M.body_idx = 1
 	end
 
-	return "VimatrixDropletBody" .. M.body_idx
+	return hl_group_prefix .. hl_group_body_segment .. M.body_idx
 end
 
 ---@class highlight_group_response
@@ -93,7 +84,7 @@ end
 
 ---@return highlight_group_response
 function M.get_next_glitch()
-	if #(M.set.glitch or {}) == 0 then
+	if #(M.scheme.glitch or {}) == 0 then
 		return { M.get_next_body(), true }
 	end
 
@@ -101,19 +92,19 @@ function M.get_next_glitch()
 
 	M.glitch_idx = M.glitch_idx + 1
 
-	if M.glitch_idx > #M.set.glitch then
+	if M.glitch_idx > #M.scheme.glitch then
 		M.glitch_idx = 1
 	end
 
-	return { "VimatrixDropletGlitch" .. M.body_idx, false }
+	return { hl_group_prefix .. hl_group_glitch_segment .. M.glitch_idx, false }
 end
 
 ---@return highlight_group_response
 function M.get_glitch_bright()
-	if not M.set.glitch_bright then
+	if not M.scheme.glitch_bright then
 		return { M.get_next_glitch().hlg, true }
 	end
-	return { "VimatrixDropletGlitchBright", false }
+	return { hl_group_prefix .. hl_group_glitch_bright_segment, false }
 end
 
 ---@param seg droplet_segment
@@ -123,10 +114,10 @@ function M.get_colour(seg)
 		return { M.get_next_body(), false }
 	end
 	if seg == segments.head then
-		return { "VimatrixDropletHead", false }
+		return { hl_group_prefix .. hl_group_head_segment, false }
 	end
 	if seg == segments.tail then
-		return { "VimatrixDropletTail", false }
+		return { hl_group_prefix .. hl_group_tail_segment, false }
 	end
 	if seg == segments.glitch then
 		return M.get_next_glitch()

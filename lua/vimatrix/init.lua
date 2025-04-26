@@ -3,8 +3,6 @@ local M = {}
 function M.setup(opts)
 	require("vimatrix.config").setup(opts)
 
-	M.namespace_id = vim.api.nvim_create_namespace("Vimatrix")
-
 	M.create_user_commands()
 	M.create_auto_commands()
 end
