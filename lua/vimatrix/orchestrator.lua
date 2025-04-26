@@ -55,9 +55,9 @@ local function setup_lanes(num_rows, num_cols)
 	for i = 1, num_cols do
 		state.lanes[i] = lanes.new_lane({
 			height = num_rows,
-			fpu = math.random(config.n_of_lane_speeds),
-			fpu_glitch = config.lane_glitch_speed_divider,
-			timeout = math.random(1, config.max_lane_timeout),
+			fpu = math.random(config.timings.fps_variance),
+			fpu_glitch = config.timings.glitch_fps_divider,
+			timeout = math.random(1, config.timings.max_timeout),
 		})
 	end
 end
@@ -125,7 +125,7 @@ M.insert = function(bufid)
 	setup_buffer_virt(num_rows, num_cols)
 	setup_lanes(num_rows, num_cols)
 
-	ticker.start(1000 / config.max_lane_fps, vim.schedule_wrap(update_lanes))
+	ticker.start(1000 / config.timings.max_fps, vim.schedule_wrap(update_lanes))
 end
 
 return M
