@@ -13,7 +13,7 @@ local M = {}
 local function validate_and_fix(props)
 	if (not props.built_in or #props.built_in == 0) and (not props.custom or #props.custom == 0) then
 		vim.notify("vimatrix was configured with an empty alphabet, defaulting to 'latin'", vim.log.levels.WARN)
-		props.built_in = { "latin" }
+		props.custom = built_in.latin_lower
 	end
 end
 
