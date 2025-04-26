@@ -13,7 +13,7 @@ local M = {}
 ---@field logging vx.log.props error logging settings; BEWARE: errors can ammass quickly if something goes wrong
 local defaults = {
 	max_lane_fps = 25,
-	n_of_lane_speeds = 3, --TODO: naming
+	n_of_lane_speeds = 2, --TODO: naming
 	lane_glitch_speed_divider = 5,
 	max_lane_timeout = 200,
 	colourscheme = "green",
@@ -24,13 +24,13 @@ local defaults = {
 	},
 	chances = {
 		body_to_tail = 150,
-		head_to_glitch = 80,
+		head_to_glitch = 150,
 		head_to_tail = -1,
 		empty_ignore_head = -1,
 		empty_stay_empty = 2,
 	},
 	logging = {
-		print_errors = true,
+		print_errors = false,
 		log_level = vim.log.levels.DEBUG,
 	},
 }
@@ -38,14 +38,17 @@ local defaults = {
 ---@type vx.config
 M.options = defaults
 
----@param opts vx.config
-function M.setup(opts)
-	M.options = vim.tbl_deep_extend("force", defaults, opts or {})
-
+local function validate_and_fix()
 	-- glitches must update at least twice as slow as max-fps
 	if M.options.lane_glitch_speed_divider == 1 then
 		M.options.lane_glitch_speed_divider = 2
 	end
+end
+
+---@param opts vx.config
+function M.setup(opts)
+	M.options = vim.tbl_deep_extend("force", defaults, opts or {})
+	validate_and_fix()
 end
 
 return M

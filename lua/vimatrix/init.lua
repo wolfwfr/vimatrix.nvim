@@ -7,7 +7,6 @@ function M.setup(opts)
 
 	M.create_user_commands()
 	M.create_auto_commands()
-	M.set_key_maps()
 end
 
 local reset = function()
@@ -55,12 +54,6 @@ function M.create_auto_commands()
 		pattern = "vimatrix",
 		callback = stop_ticker,
 	})
-end
-
-function M.set_key_maps()
-	vim.keymap.set("n", "<leader>R", reset, {})
-	vim.keymap.set("n", "<leader>M", vimatrix, {})
-	vim.keymap.set("n", "<leader>T", stop_ticker, {})
 end
 
 return M
