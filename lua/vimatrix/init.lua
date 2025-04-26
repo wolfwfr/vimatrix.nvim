@@ -25,6 +25,8 @@ local function stop_ticker()
 end
 
 local vimatrix = function()
+	math.randomseed(os.time())
+
 	local conf = require("vimatrix.config").options
 
 	require("vimatrix.colours.provider").Init(conf.colourscheme)

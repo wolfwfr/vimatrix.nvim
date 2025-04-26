@@ -30,8 +30,6 @@ local lane = {}
 ---@field char string single character to print to buffer
 ---@field hl_group string
 
-math.randomseed(os.time())
-
 ---@return boolean
 function lane:has_head()
 	return self.head ~= nil

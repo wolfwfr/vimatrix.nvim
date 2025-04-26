@@ -1,5 +1,8 @@
 local lanes = require("vimatrix.droplet_lane")
 local coloursets = require("vimatrix.colours.provider")
+local logger = require("vimatrix.errors")
+local ticker = require("vimatrix.ticker")
+local config = require("vimatrix.config").options
 
 local M = {}
 
@@ -8,8 +11,6 @@ local state = {
 	bufid = 0,
 	extmarks = {},
 }
-
-math.randomseed(os.time())
 
 --- @param n integer number of spaces
 local space = function(n)
@@ -57,17 +58,17 @@ local function setup_lanes(num_rows, num_cols)
 	for i = 1, num_cols - 1 do
 		state.lanes[i] = lanes.new_lane({
 			height = num_rows,
-			fpu = math.random(2), -- TODO: configure fpu
-			fpu_glitch = 10, -- TODO: configure fpu_glitch
-			timeout = math.random(1, 200), -- TODO: configure timeout
+			fpu = math.random(config.n_of_lane_speeds),
+			fpu_glitch = config.lane_glitch_speed_divider,
+			timeout = math.random(1, config.max_lane_timeout),
 		})
 	end
 end
 
 local function print_error_and_stop(err)
 	-- TODO: print stack-trace
-	require("vimatrix.errors").print(err)
-	require("vimatrix.ticker").stop()
+	logger.print(err)
+	ticker.stop()
 end
 
 local function print_event_virt(lane_nr, evt)
@@ -90,10 +91,6 @@ local function print_event_virt(lane_nr, evt)
 
 	char = char or extmark.virt_text[1][1]
 	hl_group = hl_group or extmark.virt_text[1][2]
-
-	if char == "" then
-		char = " " -- replace character with space
-	end
 
 	local ok, err = pcall(vim.api.nvim_buf_del_extmark, state.bufid, coloursets.ns_id, extmark_id)
 	if not ok then
@@ -133,7 +130,7 @@ M.insert = function(bufid)
 	setup_buffer_virt(num_rows, num_cols)
 	setup_lanes(num_rows, num_cols)
 
-	require("vimatrix.ticker").start(50, vim.schedule_wrap(update_lanes))
+	ticker.start(1000 / config.max_lane_fps, vim.schedule_wrap(update_lanes))
 end
 
 return M

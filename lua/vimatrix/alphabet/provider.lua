@@ -6,8 +6,6 @@ local M = {}
 ---@field randomize_on_init boolean randomizes the given alphabet on initialization; possible performance hit on init
 ---@field randomize_on_pick boolean randomizes the chosen character on pick
 
-math.randomseed(os.time())
-
 ---@param props vx.alphabet_props
 function M.init(props)
 	-- flatten alphabet
