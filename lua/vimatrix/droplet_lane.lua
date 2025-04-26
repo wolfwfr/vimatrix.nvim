@@ -209,7 +209,7 @@ end
 ---@param lane lane
 ---@return event[]?
 local function create_head_cell(lane)
-	if chances.empty_stay_empty > 0 and math.random(chances.empty_stay_empty) == 1 then
+	if chances.new_head_formation > 0 and math.random(chances.new_head_formation) ~= 1 then
 		return
 	end
 	lane.head = {

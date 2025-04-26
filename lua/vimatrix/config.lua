@@ -15,7 +15,7 @@ local M = {}
 ---@field body_to_tail integer
 ---@field head_to_glitch integer
 ---@field head_to_tail integer
----@field empty_stay_empty integer --TODO: naming
+---@field new_head_formation integer determines the chance of a new head forming when the lane is empty --TODO: naming
 ---
 ---@class vx.config
 ---@field timings vx.lane_timings
@@ -43,7 +43,7 @@ local defaults = {
 		body_to_tail = 50,
 		head_to_glitch = 150,
 		head_to_tail = 50,
-		empty_stay_empty = 2,
+		new_head_formation = 30,
 	},
 	logging = {
 		print_errors = false,
