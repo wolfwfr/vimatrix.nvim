@@ -117,6 +117,18 @@ local function update_lanes()
 end
 
 M.rain = function()
+	math.randomseed(os.time())
+
+	require("vimatrix.colours.provider").Init(config.colourscheme)
+	require("vimatrix.alphabet.provider").init(config.alphabet)
+	require("vimatrix.errors").init(config.logging)
+
+	local ok = require("vimatrix.window").open_overlay()
+	if not ok then
+		-- could not open window
+		return
+	end
+
 	local num_cols = vim.fn.winwidth(buffer.winid)
 	local num_rows = vim.fn.winheight(buffer.winid)
 	state.bufid = buffer.bufid
