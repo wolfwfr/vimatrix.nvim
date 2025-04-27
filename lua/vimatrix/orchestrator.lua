@@ -89,8 +89,9 @@ local function print_event_virt(lane_nr, evt)
 		end
 	end
 
-	char = char or extmark.virt_text[1][1]
-	hl_group = hl_group or extmark.virt_text[1][2]
+	local vt = extmark and extmark.virt_text or { { " ", "" } }
+	char = char or vt[1][1]
+	hl_group = hl_group or vt[1][2]
 
 	local ok, err = pcall(vim.api.nvim_buf_del_extmark, state.bufid, coloursets.ns_id, extmark_id)
 	if not ok then

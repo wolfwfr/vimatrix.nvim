@@ -57,7 +57,7 @@ end
 
 ---@return boolean
 function lane:has_body_at_top()
-	return self:has_head() and self.head.pos ~= 1 and not self:has_tail()
+	return not self.cleared and not self:has_tail()
 end
 
 ---@return boolean
@@ -138,6 +138,11 @@ end
 ---@param lane lane
 ---@return event[]?
 local function advance_head_cell(lane)
+  if chances.kill_head > 0 and math.random(chances.kill_head) == 1 then
+    lane.head = nil
+    return
+  end
+
 	lane.head.pos = lane.head.pos + 1
 	if lane.head.pos > lane.props.height then
 		lane.head = nil

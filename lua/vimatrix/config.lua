@@ -24,6 +24,7 @@ local M = {}
 ---@field body_to_tail integer
 ---@field head_to_glitch integer
 ---@field head_to_tail integer
+---@field kill_head integer determines the chance or a head being killed on-screen
 ---@field new_head integer determines the chance of a new head forming when the lane is empty
 ---
 ---@class vx.droplet
@@ -70,6 +71,7 @@ local defaults = {
 			body_to_tail = 50,
 			head_to_glitch = 150,
 			head_to_tail = 50,
+			kill_head = 150,
 			new_head = 30,
 		},
 	},
