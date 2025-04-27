@@ -1,3 +1,4 @@
+--TODO: cleanup this code
 local config = require("vimatrix.config")
 
 local M = {}
@@ -24,7 +25,11 @@ local function stop_ticker()
 	require("vimatrix.ticker").stop()
 end
 
-local vimatrix = function()
+---@class vx.vimatrix_runner_props
+---@field focus_listener boolean?
+
+---@param props vx.vimatrix_runner_props?
+local vimatrix = function(props)
 	math.randomseed(os.time())
 
 	local opts = config.options
@@ -34,7 +39,12 @@ local vimatrix = function()
 	require("vimatrix.errors").init(opts.logging)
 
 	require("vimatrix.buffer").open_overlay()
-	vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "ModeChanged", "InsertCharPre" }, {
+
+	local events = { "CursorMoved", "CursorMovedI", "ModeChanged", "InsertCharPre" }
+	if props and props.focus_listener then
+		table.insert(events, "FocusLost")
+	end
+	vim.api.nvim_create_autocmd(events, {
 		callback = function()
 			stop_ticker()
 			require("vimatrix.buffer").undo()
@@ -51,9 +61,26 @@ function M.auto_activate_after_timeout()
 
 	local timer = require("vimatrix.timer")
 	timer.start(timeout * 1000, vim.schedule_wrap(vimatrix))
+	vim.api.nvim_create_autocmd({ "FocusLost" }, {
+		callback = function()
+			timer.stop()
+			package.loaded["timer"] = nil
+			timer = require("vimatrix.timer")
+		end,
+	})
+	local cb = vim.schedule_wrap(function()
+		vimatrix({
+			focus_listener = true,
+		})
+	end)
+	vim.api.nvim_create_autocmd({ "FocusGained" }, {
+		callback = function()
+			timer.start(timeout * 1000, cb)
+		end,
+	})
 	vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "ModeChanged", "InsertCharPre" }, {
 		callback = function()
-			timer.reset(timeout * 1000, vim.schedule_wrap(vimatrix))
+			timer.reset(timeout * 1000, cb)
 		end,
 	})
 end

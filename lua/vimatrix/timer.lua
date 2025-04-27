@@ -1,6 +1,6 @@
 local uv = vim.uv or vim.loop
 
----@class timer
+---@class vx.timer
 local M = {}
 
 local state = {

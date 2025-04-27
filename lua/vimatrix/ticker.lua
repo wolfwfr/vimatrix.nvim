@@ -1,6 +1,6 @@
 local uv = vim.uv or vim.loop
 
----@class ticker
+---@class vx.ticker
 local M = {}
 
 local state = {
