@@ -13,7 +13,7 @@ local hl_group_glitch_bright_segment = "GlitchBright"
 ---@field head string hex colourcode
 ---@field body string[] hex colourcodes for body characters, no particular order
 ---@field tail string hex colourcode for the tail character
----@field glitch_bright string? hex colourcode for glitching characters upon change
+---@field glitch_bright string|string[]? hex colourcode for glitching characters upon character change, after which they change colour once more
 ---@field glitch? string[] hex colourcodes for glitching characters
 
 ---@param scheme_props vimatrix.colour_scheme | string
@@ -37,13 +37,15 @@ function M.Init(scheme_props)
 	for i = 1, #scheme.body do
 		hl_groups[hl_group_body_segment .. i] = { fg = scheme.body[i] }
 	end
-	if scheme.glitch_bright then
-		hl_groups[hl_group_glitch_bright_segment] = { fg = scheme.glitch_bright }
+	for i = 1, #(scheme.glitch or {}) do
+		hl_groups[hl_group_glitch_segment .. i] = { fg = scheme.glitch[i] }
 	end
-	if scheme.glitch then
-		for i = 1, #scheme.glitch do
-			hl_groups[hl_group_glitch_segment .. i] = { fg = scheme.glitch[i] }
-		end
+
+	local brights = scheme.glitch_bright and type(scheme.glitch_bright) == "string" and { scheme.glitch_bright }
+		or scheme.glitch_bright
+
+	for i = 1, #(brights or {}) do
+		hl_groups[hl_group_glitch_bright_segment .. i] = { fg = brights[i] }
 	end
 
 	for hl_group, hl in pairs(hl_groups) do
@@ -104,7 +106,16 @@ function M.get_glitch_bright()
 	if not M.scheme.glitch_bright then
 		return M.get_next_glitch()
 	end
-	return { hl_group_prefix .. hl_group_glitch_bright_segment, false }
+
+	M.glitch_bright_idx = M.glitch_bright_ix or 0
+
+	M.glitch_bright_idx = M.glitch_bright_idx + 1
+
+	if M.glitch_bright_idx > #M.scheme.glitch_bright then
+		M.glitch_bright_idx = 1
+	end
+
+	return { hl_group_prefix .. hl_group_glitch_bright_segment .. M.glitch_bright_idx, false }
 end
 
 ---@param seg droplet_segment
