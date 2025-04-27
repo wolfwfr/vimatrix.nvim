@@ -3,6 +3,7 @@ local coloursets = require("vimatrix.colours.provider")
 local logger = require("vimatrix.errors")
 local ticker = require("vimatrix.ticker")
 local config = require("vimatrix.config").options
+local buffer = require("vimatrix.buffer")
 
 local M = {}
 
@@ -115,11 +116,10 @@ local function update_lanes()
 	end
 end
 
----@param bufid integer id of the buffer to write to
-M.insert = function(bufid)
-	local num_cols = vim.fn.winwidth(0)
-	local num_rows = vim.fn.winheight(0)
-	state.bufid = bufid
+M.rain = function()
+	local num_cols = vim.fn.winwidth(buffer.winid)
+	local num_rows = vim.fn.winheight(buffer.winid)
+	state.bufid = buffer.bufid
 
 	setup_buffer(num_rows, num_cols)
 	setup_buffer_virt(num_rows, num_cols)

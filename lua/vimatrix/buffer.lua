@@ -1,3 +1,6 @@
+local config = require("vimatrix.config").options.window
+local colours = require("vimatrix.colours.provider")
+
 local M = {}
 
 local bufopts = {
@@ -25,15 +28,52 @@ local winopts = {
 	wrap = false,
 }
 
----@return integer buffer_id
-function M.Open()
-	local bufid = vim.api.nvim_create_buf(false, true)
-	vim.api.nvim_buf_set_name(bufid, "vimatrix")
-	vim.api.nvim_set_current_buf(bufid)
-	local winid = vim.api.nvim_get_current_win()
-	M.bo(bufid, bufopts)
-	M.wo(winid, winopts)
-	return bufid
+local function set_cursor_blend(i)
+	local def = vim.api.nvim_get_hl(0, { name = "Cursor" })
+	vim.api.nvim_set_hl(0, "Cursor", vim.tbl_extend("force", def, { blend = i }))
+	vim.opt.guicursor:append("a:Cursor")
+end
+
+local function hide_cursor()
+	set_cursor_blend(100)
+end
+
+local function reveal_cursor()
+	set_cursor_blend(0)
+end
+
+function M.open_overlay()
+	local current_buffer = vim.api.nvim_get_current_buf()
+	local filetype = vim.bo[current_buffer].filetype
+	local blend = (config.by_filetype[filetype] or config.general).blend
+	local background = (config.by_filetype[filetype] or config.general).background
+
+	M.bufid = vim.api.nvim_create_buf(false, true)
+	vim.api.nvim_buf_set_name(M.bufid, "vimatrix")
+
+	M.winid = vim.api.nvim_open_win(M.bufid, false, {
+		relative = "editor",
+		row = 0,
+		col = 0,
+		width = vim.go.columns,
+		height = vim.go.lines,
+		focusable = false,
+		zindex = 10,
+		style = "minimal",
+		noautocmd = true,
+	})
+	vim.api.nvim_win_set_hl_ns(M.winid, colours.ns_id)
+	vim.api.nvim_set_hl(colours.ns_id, "NormalFloat", { bg = background })
+	vim.wo[M.winid].winblend = blend
+	hide_cursor()
+
+	M.bo(M.bufid, bufopts)
+	M.wo(M.winid, winopts)
+end
+
+function M.undo()
+	reveal_cursor()
+	pcall(vim.api.nvim_win_close, M.winid, true)
 end
 
 -- NOTE: thanks Folke, your code is awesome

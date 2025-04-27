@@ -2,11 +2,23 @@ local alph = require("vimatrix.alphabet.symbols")
 
 local M = {}
 
+---@class vx.auto_activation
+---@field screensaver_timeout integer seconds after which to automatically display vimatrix
+---@field on_filetype string[] filetypes for which to automatically display vimatrix
+
 ---@class vx.lane_timings
 ---@field max_fps integer frames per second for the fastest lane
 ---@field fps_variance integer the number of different speeds to assign to the various lanes; each speed is equal to 'fps/random(1,fps_variance)'
 ---@field glitch_fps_divider integer glitch symbols update at a slower pace than the droplet's progression; lane_glitch_fps_divider defines the ratio; glitch updates equal 'lane_fps/lane_glitch_fps_divider';
 ---@field max_timeout integer maximum number of seconds that any lane can idle prior to printing its first droplet; timeout is randomized to random(1, max_timeout)
+---
+---@class vx.window_props
+---@field background string hex-code colour for window background; empty string will not set a custom background
+---@field blend integer
+---
+---@class vx.window
+---@field general vx.window_props
+---@field by_filetype table<string, vx.window_props>
 ---
 ---@class vx.droplet
 ---@field max_size_offset integer a positive value will force tail creation on a droplet when it has reached length == window_height - max_size_offset
@@ -18,17 +30,35 @@ local M = {}
 ---@field new_head_formation integer determines the chance of a new head forming when the lane is empty --TODO: naming
 ---
 ---@class vx.config
+---@field auto_activation vx.auto_activation
 ---@field timings vx.lane_timings
 ---@field colourscheme vimatrix.colour_scheme | string
 ---@field alphabet vx.alphabet_props
 ---@field chances vx.chances the chances of random events; each is a chance of 1 in x
 ---@field logging vx.log.props error logging settings; BEWARE: errors can ammass quickly if something goes wrong
 local defaults = {
+	auto_activation = {
+		screensaver_timeout = 0,
+		on_filetype = {},
+	},
 	timings = {
 		max_fps = 25,
 		fps_variance = 2,
 		glitch_fps_divider = 5,
 		max_timeout = 200,
+	},
+	window = {
+		general = {
+			background = "#000000",
+			blend = 0,
+		},
+		by_filetype = {
+			-- e.g:
+			-- snacks_dashboard = {
+			-- 	background = "",
+			-- 	blend = 100,
+			-- },
+		},
 	},
 	droplet = {
 		max_size_offset = 5,
