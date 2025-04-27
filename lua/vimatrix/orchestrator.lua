@@ -56,9 +56,11 @@ local function setup_lanes(num_rows, num_cols)
 	for i = 1, num_cols do
 		state.lanes[i] = lanes.new_lane({
 			height = num_rows,
-			fpu = math.random(config.timings.fps_variance),
-			fpu_glitch = config.timings.glitch_fps_divider,
-			timeout = math.random(1, config.timings.max_timeout),
+			fpu = math.random(config.droplet.timings.fps_variance),
+			fpu_glitch = config.droplet.timings.glitch_fps_divider,
+			timeout = math.random(1, config.droplet.timings.max_timeout),
+			local_glitch_sharing = config.droplet.timings.local_glitch_frame_sharing,
+			global_glitch_sharing = config.droplet.timings.global_glitch_frame_sharing,
 		})
 	end
 end
@@ -137,7 +139,7 @@ M.rain = function()
 	setup_buffer_virt(num_rows, num_cols)
 	setup_lanes(num_rows, num_cols)
 
-	ticker.start(1000 / config.timings.max_fps, vim.schedule_wrap(update_lanes))
+	ticker.start(1000 / config.droplet.timings.max_fps, vim.schedule_wrap(update_lanes))
 end
 
 return M

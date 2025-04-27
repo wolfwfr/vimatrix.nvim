@@ -10,6 +10,8 @@ local M = {}
 ---@field fpu integer the number of frames per update, essentially, the interval between updates of the droplets in this lane
 ---@field fpu_glitch integer the number of frames per update for glitch characters, must be greater or equal to fpu
 ---@field timeout integer the number of updates to skip upon first run
+---@field local_glitch_sharing boolean determines whether glitches of this lane all update simultaneously or track their own frames
+---@field global_glitch_sharing boolean determines whether glitches of all lanes all update simultaneously or not; overrides local_glitch_sharing
 
 ---@class cell
 ---@field pos integer --the display cell that contains the droplet-character; 1-indexed
@@ -25,6 +27,7 @@ local M = {}
 ---@field props lane_props
 ---@field timeout_counter integer
 ---@field frame integer
+---@field shared_glitch_frame integer
 ---@field head cell
 ---@field tail cell
 ---@field glitches glitch[]
@@ -230,8 +233,17 @@ end
 local function replace_glitch_cells(lane)
 	local mutations = {}
 
+  local sharing_enabled = (lane.props.global_glitch_sharing or lane.props.local_glitch_sharing)
+  local shared_refresh_eligible = sharing_enabled and (lane.shared_glitch_frame + 1) % lane.props.fpu_glitch == 0
+  if sharing_enabled then
+    lane.shared_glitch_frame = lane.shared_glitch_frame + 1
+  end
+  if shared_refresh_eligible then
+    lane.shared_glitch_frame = 0
+  end
+
 	for i, gl in ipairs(lane.glitches or {}) do
-		local refresh_eligible = (gl.frame + 1) % lane.props.fpu_glitch == 0
+		local refresh_eligible = shared_refresh_eligible or (gl.frame + 1) % lane.props.fpu_glitch == 0
 
 		if refresh_eligible then
 			local gln = new_glitch(gl.cell.pos)
@@ -286,11 +298,24 @@ end
 
 ---@return event[]
 function lane:advance()
-	if await_timeout(self) then
+  local await_timeout = await_timeout(self)
+  local global_glitches = self.props.global_glitch_sharing and chances.head_to_glitch > 0
+
+  if await_timeout and global_glitches then
+    self.shared_glitch_frame = self.shared_glitch_frame + 1 -- keep in sync with other lanes
+  end
+
+	if await_timeout then
 		return {}
 	end
 
-	if should_skip(self) then
+  local should_skip = should_skip(self)
+  if should_skip and global_glitches then
+    local mutations = replace_glitch_cells(self)
+    return mutations or {}
+  end
+
+	if should_skip then
 		return {}
 	end
 
@@ -354,10 +379,14 @@ end
 ---@param props lane_props
 ---@return lane
 function M.new_lane(props)
+  if props.global_glitch_sharing then
+    props.local_glitch_sharing = false
+  end
 	local l = setmetatable({}, { __index = lane })
 	l.props = props
 	l.frame = 0
   l.cleared = true
+  l.shared_glitch_frame = 0
 	return l
 end
 
