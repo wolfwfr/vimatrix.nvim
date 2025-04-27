@@ -38,7 +38,11 @@ local vimatrix = function(props)
 	require("vimatrix.alphabet.provider").init(opts.alphabet)
 	require("vimatrix.errors").init(opts.logging)
 
-	require("vimatrix.buffer").open_overlay()
+	local ok = require("vimatrix.buffer").open_overlay()
+	if not ok then
+		-- could not open window
+		return
+	end
 
 	local events = { "CursorMoved", "CursorMovedI", "ModeChanged", "InsertCharPre" }
 	if props and props.focus_listener then

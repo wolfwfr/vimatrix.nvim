@@ -42,6 +42,7 @@ local function reveal_cursor()
 	set_cursor_blend(0)
 end
 
+---@return boolean
 function M.open_overlay()
 	local current_buffer = vim.api.nvim_get_current_buf()
 	local filetype = vim.bo[current_buffer].filetype
@@ -49,7 +50,11 @@ function M.open_overlay()
 	local background = (config.by_filetype[filetype] or config.general).background
 
 	M.bufid = vim.api.nvim_create_buf(false, true)
-	vim.api.nvim_buf_set_name(M.bufid, "vimatrix")
+	local ok = pcall(vim.api.nvim_buf_set_name, M.bufid, "vimatrix")
+	if not ok then
+		-- vimatrix already running (e.g. due to both screensaver & filetype instigation)
+		return false
+	end
 
 	M.winid = vim.api.nvim_open_win(M.bufid, false, {
 		relative = "editor",
@@ -69,6 +74,7 @@ function M.open_overlay()
 
 	M.bo(M.bufid, bufopts)
 	M.wo(M.winid, winopts)
+	return true
 end
 
 function M.undo()
