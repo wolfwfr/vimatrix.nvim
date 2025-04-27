@@ -18,21 +18,21 @@ local M = {}
 ---@field general vx.window_props
 ---@field by_filetype table<string, vx.window_props>
 ---
----@class vx.droplet
----@field max_size_offset integer a positive value will force tail creation on a droplet when it has reached length == window_height - max_size_offset
-
----@class vx.chances
+---@class vx.random
 ---@field body_to_tail integer
 ---@field head_to_glitch integer
 ---@field head_to_tail integer
 ---@field new_head integer determines the chance of a new head forming when the lane is empty
 ---
+---@class vx.droplet
+---@field max_size_offset integer a positive value will force tail creation on a droplet when it has reached length == window_height - max_size_offset
+---@field random vx.random the chances of random events; each is a chance of 1 in x
+
 ---@class vx.config
 ---@field auto_activation vx.auto_activation
 ---@field timings vx.lane_timings
 ---@field colourscheme vimatrix.colour_scheme | string
 ---@field alphabet vx.alphabet_props
----@field chances vx.chances the chances of random events; each is a chance of 1 in x
 ---@field logging vx.log.props error logging settings; BEWARE: errors can ammass quickly if something goes wrong
 local defaults = {
 	auto_activation = {
@@ -60,18 +60,18 @@ local defaults = {
 	},
 	droplet = {
 		max_size_offset = 5,
+		random = {
+			body_to_tail = 50,
+			head_to_glitch = 150,
+			head_to_tail = 50,
+			new_head = 30,
+		},
 	},
 	colourscheme = "green",
 	alphabet = {
 		built_in = { "katakana", "decimal", "symbols" },
 		randomize_on_init = true,
 		randomize_on_pick = false,
-	},
-	chances = {
-		body_to_tail = 50,
-		head_to_glitch = 150,
-		head_to_tail = 50,
-		new_head = 30,
 	},
 	logging = {
 		print_errors = false,

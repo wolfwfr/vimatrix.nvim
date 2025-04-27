@@ -1,5 +1,5 @@
-local chances = require("vimatrix.config").options.chances
 local droplet_props = require("vimatrix.config").options.droplet
+local chances = droplet_props.random
 local colourscheme = require("vimatrix.colours.provider")
 local alph = require("vimatrix.alphabet.provider")
 
