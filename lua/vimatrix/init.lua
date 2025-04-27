@@ -64,7 +64,6 @@ function M.auto_activate_after_timeout()
 	end
 
 	local timer = require("vimatrix.timer")
-	timer.start(timeout * 1000, vim.schedule_wrap(vimatrix))
 	vim.api.nvim_create_autocmd({ "FocusLost" }, {
 		callback = function()
 			timer.stop()
