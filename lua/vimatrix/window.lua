@@ -50,7 +50,7 @@ function M.open_overlay()
 	local background = (config.by_filetype[filetype] or config.general).background
 
 	local id = vim.api.nvim_get_hl_id_by_name("NormalFloat")
-	M.old_fl_bg = vim.api.nvim_get_hl(0, { id = id }).bg
+	M.old_fl_hl = vim.api.nvim_get_hl(0, { id = id })
 
 	M.bufid = vim.api.nvim_create_buf(false, true)
 	local ok = pcall(vim.api.nvim_buf_set_name, M.bufid, "vimatrix")
@@ -83,7 +83,16 @@ end
 function M.undo()
 	reveal_cursor()
 	pcall(vim.api.nvim_win_close, M.winid, true)
-	vim.api.nvim_set_hl(colours.ns_id, "NormalFloat", { bg = M.old_fl_bg })
+	vim.api.nvim_set_hl(colours.ns_id, "NormalFloat", {
+		bg = M.old_fl_hl.bg,
+		fg = M.old_fl_hl.fg,
+		sp = M.old_fl_hl.sp,
+		default = M.old_fl_hl.default,
+		link = M.old_fl_hl.link,
+		blend = M.old_fl_hl.blend,
+		ctermbg = M.old_fl_hl.cterm and M.old_fl_hl.cterm.background,
+		ctermfg = M.old_fl_hl.cterm and M.old_fl_hl.cterm.foreground,
+	})
 end
 
 -- NOTE: thanks Folke, your code is awesome
