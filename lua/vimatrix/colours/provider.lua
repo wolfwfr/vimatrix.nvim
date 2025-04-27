@@ -102,7 +102,7 @@ end
 ---@return highlight_group_response
 function M.get_glitch_bright()
 	if not M.scheme.glitch_bright then
-		return { M.get_next_glitch().hlg, true }
+		return M.get_next_glitch()
 	end
 	return { hl_group_prefix .. hl_group_glitch_bright_segment, false }
 end
