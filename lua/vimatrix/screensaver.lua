@@ -13,6 +13,7 @@ function M.setup(props)
 	end
 
 	local timer = require("vimatrix.timer")
+
 	vim.api.nvim_create_autocmd({ "FocusLost" }, {
 		callback = function()
 			timer.stop()

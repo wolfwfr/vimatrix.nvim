@@ -1,5 +1,3 @@
-local alph = require("vimatrix.alphabet.symbols")
-
 local M = {}
 
 ---@class vx.auto_activation
@@ -27,7 +25,7 @@ local M = {}
 ---@field body_to_tail integer
 ---@field head_to_glitch integer
 ---@field head_to_tail integer
----@field new_head_formation integer determines the chance of a new head forming when the lane is empty --TODO: naming
+---@field new_head integer determines the chance of a new head forming when the lane is empty
 ---
 ---@class vx.config
 ---@field auto_activation vx.auto_activation
@@ -73,7 +71,7 @@ local defaults = {
 		body_to_tail = 50,
 		head_to_glitch = 150,
 		head_to_tail = 50,
-		new_head_formation = 30,
+		new_head = 30,
 	},
 	logging = {
 		print_errors = false,
