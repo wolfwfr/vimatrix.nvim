@@ -38,7 +38,7 @@ local vimatrix = function(props)
 	require("vimatrix.alphabet.provider").init(opts.alphabet)
 	require("vimatrix.errors").init(opts.logging)
 
-	local ok = require("vimatrix.buffer").open_overlay()
+	local ok = require("vimatrix.window").open_overlay()
 	if not ok then
 		-- could not open window
 		return
@@ -51,7 +51,7 @@ local vimatrix = function(props)
 	vim.api.nvim_create_autocmd(events, {
 		callback = function()
 			stop_ticker()
-			require("vimatrix.buffer").undo()
+			require("vimatrix.window").undo()
 		end,
 	})
 	require("vimatrix.orchestrator").rain()

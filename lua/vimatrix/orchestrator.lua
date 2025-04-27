@@ -3,7 +3,7 @@ local coloursets = require("vimatrix.colours.provider")
 local logger = require("vimatrix.errors")
 local ticker = require("vimatrix.ticker")
 local config = require("vimatrix.config").options
-local buffer = require("vimatrix.buffer")
+local buffer = require("vimatrix.window")
 
 local M = {}
 
