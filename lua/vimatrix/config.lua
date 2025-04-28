@@ -103,7 +103,7 @@ local defaults = {
 			new_head = 30,
 		},
 	},
-	colourscheme = "green",
+	colourscheme = "matrix",
 	highlight_props = {
 		bold = true,
 	},
