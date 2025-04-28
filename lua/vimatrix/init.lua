@@ -5,9 +5,9 @@ local function stop_ticker()
 end
 
 ---@class vx.vimatrix_runner_props
----@field focus_listener boolean?
+---@field focus_listener? boolean
 
----@param props vx.vimatrix_runner_props?
+---@param props? vx.vimatrix_runner_props
 local rain = function(props)
 	local events = { "CursorMoved", "CursorMovedI", "ModeChanged", "InsertCharPre" }
 	local _ = props and props.focus_listener and table.insert(events, "FocusLost") or nil

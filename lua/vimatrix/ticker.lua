@@ -30,7 +30,7 @@ end
 
 ---@param interval integer milliseconds
 ---@param cb function callback function
----@param max integer? stops timer after this many cycles [optional]
+---@param max? integer stops timer after this many cycles [optional]
 function M.start(interval, cb, max)
 	state.stop_ticker = false
 	state.counter = 0

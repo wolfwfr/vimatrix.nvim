@@ -13,7 +13,7 @@ local hl_group_glitch_bright_segment = "GlitchBright"
 ---@field head string hex colourcode for head cell
 ---@field body string[] hex colourcodes for body cells, no particular order
 ---@field tail string hex colourcode for the tail cell
----@field glitch_bright string|string[]? hex colourcode for glitch cells upon character change, after which they change colour once more
+---@field glitch_bright? string|string[] hex colourcode for glitch cells upon character change, after which they change colour once more
 ---@field glitch? string[] hex colourcodes for glitch cells
 
 ---@param scheme_props vimatrix.colour_scheme | string
