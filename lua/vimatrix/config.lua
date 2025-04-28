@@ -108,6 +108,8 @@ local defaults = {
 	colourscheme = "matrix",
 	highlight_props = {
 		bold = true,
+		blend = 1, -- quickfix for loss of highlight contrast with window blend;
+		-- might be removed if it causes unwanted effects
 	},
 	alphabet = {
 		built_in = { "katakana", "decimal", "symbols" },
