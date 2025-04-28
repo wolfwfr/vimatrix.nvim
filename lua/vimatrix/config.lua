@@ -1,6 +1,7 @@
 local M = {}
 
 ---@class vx.auto_activation
+---@field screensaver_setup_deferral integer seconds to wait prior to activating screensaver timers (this helps if you automatically open multiple neovim sessions and screensavers are needlessly activated)
 ---@field screensaver_timeout integer seconds after which to automatically display vimatrix
 ---@field on_filetype string[] filetypes for which to automatically display vimatrix
 
@@ -41,12 +42,13 @@ local M = {}
 ---@field logging vx.log.props error logging settings; BEWARE: errors can ammass quickly if something goes wrong
 local defaults = {
 	auto_activation = {
+		screensaver_setup_deferral = 10,
 		screensaver_timeout = 0,
 		on_filetype = {},
 	},
 	window = {
 		general = {
-			background = "#000000",
+			background = "#000000", --black
 			blend = 0,
 		},
 		by_filetype = {

@@ -1,1 +1,3 @@
-instr*
+/.tests
+/build
+/debug
