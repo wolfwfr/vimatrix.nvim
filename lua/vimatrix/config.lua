@@ -1,8 +1,14 @@
 local M = {}
 
+---@class vx.screensaver
+---@field setup_deferral integer seconds to wait prior to activating screensaver timers (this helps if you automatically open multiple neovim sessions and screensavers are needlessly activated)
+---@field timeout integer seconds after which to automatically display vimatrix
+---@field ignore_focus boolean allows screensaver to activate on neovim instances that are out-of-focus (e.g. background)
+---@field block_on_term boolean prevents screensaver from activating when terminal window is open
+---@field block_on_cmd_line boolean prevents screensaver from activating when command-line window is open
+
 ---@class vx.auto_activation
----@field screensaver_setup_deferral integer seconds to wait prior to activating screensaver timers (this helps if you automatically open multiple neovim sessions and screensavers are needlessly activated)
----@field screensaver_timeout integer seconds after which to automatically display vimatrix
+---@field screensaver vx.screensaver screensaver specific settings
 ---@field on_filetype string[] filetypes for which to automatically display vimatrix
 
 ---@class vx.lane_timings
@@ -12,7 +18,7 @@ local M = {}
 ---@field max_timeout integer maximum number of seconds that any lane can idle prior to printing its first droplet; timeout is randomized to random(1, max_timeout)
 ---@field local_glitch_frame_sharing boolean determines whether glitch cells within one lane synchronise their timings
 ---@field global_glitch_frame_sharing boolean determines whether all glitch cells on screen synchronise their timings; overrules local_glitch_frame_sharing when true
----
+
 ---@class vx.window_props
 ---@field background string hex-code colour for window background; empty string will not set a custom background
 ---@field blend integer determines the blend (i.e.) transparency property of the window; see vim.api.keyset.win_config
@@ -21,14 +27,14 @@ local M = {}
 ---@class vx.window
 ---@field general vx.window_props window settings that apply when no filetype match is found
 ---@field by_filetype table<string, vx.window_props> window settings that appy to the configured filetype
----
+
 ---@class vx.random
 ---@field body_to_tail integer determines the chance of a body cell at the top row changing into a tail cell
 ---@field head_to_glitch integer determines the chance of a head cell to leave behind a glitch cell
 ---@field head_to_tail integer determines the chance of a head cell to immediately be followed by a tail cell (nano-droplet)
 ---@field kill_head integer determines the chance or a head cell being killed on-screen
 ---@field new_head integer determines the chance of a new head cell forming when the lane is empty
----
+
 ---@class vx.droplet
 ---@field max_size_offset integer a positive value will force tail creation on a droplet when it has reached length == window_height - max_size_offset
 ---@field timings vx.lane_timings the timings of changes on screen
@@ -43,8 +49,13 @@ local M = {}
 ---@field logging vx.log.props error logging settings; BEWARE: errors can ammass quickly if something goes wrong
 local defaults = {
 	auto_activation = {
-		screensaver_setup_deferral = 10,
-		screensaver_timeout = 0,
+		screensaver = {
+			setup_deferral = 10,
+			timeout = 0,
+			ignore_focus = false,
+			block_on_term = false,
+			block_on_cmd_line = false,
+		},
 		on_filetype = {},
 	},
 	window = {
@@ -69,7 +80,7 @@ local defaults = {
 			glitch_fps_divider = 5,
 			max_timeout = 200,
 			local_glitch_frame_sharing = false,
-			global_glitch_frame_sharing = false, -- true to the source material
+			global_glitch_frame_sharing = false,
 		},
 		random = {
 			body_to_tail = 50,
