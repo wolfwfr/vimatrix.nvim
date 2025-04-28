@@ -44,10 +44,11 @@ local function create_user_commands()
 	vim.api.nvim_create_user_command("VimatrixStop", function()
 		stop_ticker()
 	end, {})
-	--
-	-- vim.api.nvim_create_autocmd("FocusGained", {
-	-- 	callback = rain,
-	-- })
+
+	vim.api.nvim_create_user_command("VimatrixClose", function()
+		stop_ticker()
+		require("vimatrix.window").undo()
+	end, {})
 end
 
 function M.setup(opts)
