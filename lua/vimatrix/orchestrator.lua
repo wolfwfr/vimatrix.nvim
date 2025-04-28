@@ -73,6 +73,12 @@ end
 
 local function print_event_virt(lane_nr, evt)
 	local pos = evt.pos
+	local window = require("vimatrix.window")
+
+	if window.ignore_cells and window.ignore_cells(window.old_buffer, pos, lane_nr) then
+		return
+	end
+
 	local char = evt.char
 	local hl_group = evt.hl_group
 	local extmark_id = state.extmarks[pos][lane_nr]

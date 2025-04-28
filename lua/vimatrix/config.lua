@@ -23,6 +23,7 @@ local M = {}
 ---@field background string hex-code colour for window background; empty string will not set a custom background
 ---@field blend integer determines the blend (i.e.) transparency property of the window; see vim.api.keyset.win_config
 ---@field zindex integer zindex of the floating vimatrix window; see vim.api.keyset.win_config; 1000 seems to hide every other window underneath it but this includes messages and terminal applications from which vimatrix is not canceled.
+---@field ignore_cells? function(integer, integer, integer) callback function that accepts parameters (old_buffer_id, line, column) and returns a boolean that determines if printing to that cell is allowed.
 ---
 ---@class vx.window
 ---@field general vx.window_props window settings that apply when no filetype match is found
@@ -76,6 +77,7 @@ local defaults = {
 			background = "#000000", --black
 			blend = 0,
 			zindex = 10,
+			ignore_cells = nil,
 		},
 		by_filetype = {
 			-- e.g:

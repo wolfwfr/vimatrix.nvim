@@ -44,8 +44,8 @@ end
 
 ---@return boolean
 function M.open_overlay()
-	local current_buffer = vim.api.nvim_get_current_buf()
-	local filetype = vim.bo[current_buffer].filetype
+	M.old_buffer = vim.api.nvim_get_current_buf()
+	local filetype = vim.bo[M.old_buffer].filetype
 	local blend = (config.by_filetype[filetype] or config.general).blend
 	local background = (config.by_filetype[filetype] or config.general).background
 	local zindex = (config.by_filetype[filetype] or config.general).zindex
@@ -78,6 +78,9 @@ function M.open_overlay()
 
 	M.bo(M.bufid, bufopts)
 	M.wo(M.winid, winopts)
+
+	M.ignore_cells = (config.by_filetype[filetype] or config.general).ignore_cells
+
 	return true
 end
 
