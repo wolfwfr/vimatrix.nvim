@@ -4,8 +4,8 @@ local built_in = require("vimatrix.alphabet.symbols")
 local M = {}
 
 ---@class vx.alphabet_props
----@field built_in string[]?
----@field custom string[]?
+---@field built_in string[]? built-in symbol-sets to include
+---@field custom string[]? custom symbols to include
 ---@field randomize_on_init boolean randomizes the given alphabet on initialization; possible performance hit on init
 ---@field randomize_on_pick boolean randomizes the chosen character on pick
 

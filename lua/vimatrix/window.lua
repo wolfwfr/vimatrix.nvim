@@ -48,6 +48,7 @@ function M.open_overlay()
 	local filetype = vim.bo[current_buffer].filetype
 	local blend = (config.by_filetype[filetype] or config.general).blend
 	local background = (config.by_filetype[filetype] or config.general).background
+	local zindex = (config.by_filetype[filetype] or config.general).zindex
 
 	local id = vim.api.nvim_get_hl_id_by_name("NormalFloat")
 	M.old_fl_hl = vim.api.nvim_get_hl(0, { id = id })
@@ -66,7 +67,7 @@ function M.open_overlay()
 		width = vim.go.columns,
 		height = vim.go.lines,
 		focusable = false,
-		zindex = 10,
+		zindex = zindex,
 		style = "minimal",
 		noautocmd = true,
 	})
