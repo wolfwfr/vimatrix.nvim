@@ -97,7 +97,7 @@ local defaults = {
 		},
 		random = {
 			body_to_tail = 50,
-			head_to_glitch = 150,
+			head_to_glitch = 100,
 			head_to_tail = 50,
 			kill_head = 150,
 			new_head = 30,
