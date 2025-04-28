@@ -3,7 +3,7 @@ local M = {}
 M["matrix"] = { -- best effort reproduction of digital rain observed in the first neo & cypher scene
 	head = "#8ed1cb",
 	body = { "#27b427", "#1b671b", "#138c13", "#274e30", "#0d1c11" },
-	tail = "#27b427",
+	tail = "#425842",
 	glitch_bright = { "#27b427", "#1b671b", "#138c13", "#274e30", "#0d1c11" },
 }
 
