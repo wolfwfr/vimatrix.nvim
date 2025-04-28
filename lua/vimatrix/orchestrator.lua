@@ -122,7 +122,7 @@ end
 M.rain = function()
 	math.randomseed(os.time())
 
-	require("vimatrix.colours.provider").Init(config.colourscheme)
+	require("vimatrix.colours.provider").Init(config.colourscheme, config.highlight_props)
 	require("vimatrix.alphabet.provider").init(config.alphabet)
 	require("vimatrix.errors").init(config.logging)
 

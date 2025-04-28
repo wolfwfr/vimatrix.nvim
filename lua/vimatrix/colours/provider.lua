@@ -17,7 +17,20 @@ local hl_group_glitch_bright_segment = "GlitchBright"
 ---@field glitch? string[] hex colourcodes for glitch cells
 
 ---@param scheme_props vimatrix.colour_scheme | string
-function M.Init(scheme_props)
+---@param highlight_props? vim.api.keyset.highlight Highlight definition map, accepts the following keys:
+--- - bg: color name or "#RRGGBB"
+--- - blend: integer between 0 and 100
+--- - bold: boolean
+--- - standout: boolean
+--- - underline: boolean
+--- - undercurl: boolean
+--- - underdouble: boolean
+--- - underdotted: boolean
+--- - underdashed: boolean
+--- - strikethrough: boolean
+--- - italic: boolean
+--- - reverse: boolean
+function M.Init(scheme_props, highlight_props)
 	local scheme = scheme_props
 	if type(scheme_props) == "string" then
 		scheme = require("vimatrix.colours.schemes")[scheme_props]
@@ -50,7 +63,7 @@ function M.Init(scheme_props)
 
 	for hl_group, hl in pairs(hl_groups) do
 		hl_group = hl_group_prefix .. hl_group
-		vim.api.nvim_set_hl(M.ns_id, hl_group, hl)
+		vim.api.nvim_set_hl(M.ns_id, hl_group, vim.tbl_extend("keep", hl, highlight_props or {}))
 	end
 
 	vim.api.nvim_set_hl_ns(M.ns_id)

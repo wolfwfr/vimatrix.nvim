@@ -45,6 +45,19 @@ local M = {}
 ---@field window vx.window settings that relate to the window that vimatrix.nvim opens
 ---@field droplet vx.droplet settings that relate to the droplet lanes
 ---@field colourscheme vimatrix.colour_scheme | string
+---@field highlight_props? vim.api.keyset.highlight Highlight definition to apply to rendered cells, accepts the following keys:
+--- - bg: color name or "#RRGGBB"
+--- - blend: integer between 0 and 100
+--- - bold: boolean
+--- - standout: boolean
+--- - underline: boolean
+--- - undercurl: boolean
+--- - underdouble: boolean
+--- - underdotted: boolean
+--- - underdashed: boolean
+--- - strikethrough: boolean
+--- - italic: boolean
+--- - reverse: boolean
 ---@field alphabet vx.alphabet_props
 ---@field logging vx.log.props error logging settings; BEWARE: errors can ammass quickly if something goes wrong
 local defaults = {
@@ -91,6 +104,9 @@ local defaults = {
 		},
 	},
 	colourscheme = "green",
+	highlight_props = {
+		bold = true,
+	},
 	alphabet = {
 		built_in = { "katakana", "decimal", "symbols" },
 		custom = {},
