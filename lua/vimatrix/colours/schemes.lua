@@ -8,17 +8,17 @@ M["matrix"] = { -- best effort reproduction of digital rain observed in the firs
 }
 
 M["green"] = {
-	head = "#f2fff2",
+	head = "#b6f1b3",
 	body = { "#27b427", "#1b671b", "#138c13" },
 	tail = "#425842",
 	glitch_bright = "#addaae",
 }
 
 M["red"] = {
-	head = "#ffe1e1",
-	body = { "#b02d2d", "#c71616", "#7f0f0f" },
+	head = "#dc6d6d",
+	body = { "#e71919", "#c30f0f", "#e50d0d" },
 	tail = "#b08383",
-	glitch_bright = "#cd9393",
+	glitch_bright = "#f60a0a",
 }
 
 M["orange"] = {
