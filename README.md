@@ -3,7 +3,7 @@
 # 🍃 vimatrix.nvim 🍃
 
 Configurable digital rain simulator for neovim, that can act as a screensaver or
-run automatically on particular files.
+run automatically on files of your choosing.
 
 [vimatrix.webm](https://github.com/user-attachments/assets/8d3d64f6-ed09-47eb-8230-51109df3658b)
 
@@ -24,6 +24,7 @@ for inspiring this plugin!
 - Neovim >= 0.8.0
 - a font for the configured symbols (katakana by default)
 - some CPU headroom
+- red pill
 
 ## 📦 Installation
 
@@ -34,7 +35,7 @@ Install the plugin with your preferred package manager:
 {
   "wolfwfr/vimatrix.nvim",
   opts = {
-    -- ...
+    -- configuration options go here
   }
 }
 ```
@@ -70,7 +71,7 @@ Install the plugin with your preferred package manager:
       -- },
     },
   },
-    droplet = {
+  droplet = {
     max_size_offset = 5,
     timings = {
       max_fps = 25,
@@ -300,7 +301,7 @@ and the following symbols:
 > font installed that supports them.
 
 > [!NOTE]  
-> Note that some of the built-in alphabets don't exclusively contain half-width
+> Some of the built-in alphabets don't exclusively contain half-width
 > characters, which is not perfect for visual consistency, but it still looks
 > pretty cool. Affected alphabets are arabic and sanskrit.
 
@@ -341,7 +342,7 @@ The config determines the speeds, the speed variance, the chance of droplets
 forming or dying, the chance of glitching characters appearing, how frequently
 they change and whether or not they change in sync.
 
-So no worries, you finally found one more plugin that you can configure for
+So good news, you finally found one more plugin that you can configure for
 days.
 
 ##### 🍃 Recommended settings for matrix reproduction
@@ -426,7 +427,7 @@ close the window or only stop the ticker, respectively.
 ### 🖱 Manual Invocation
 
 Vimatrix.nvim makes the `VimatrixOpen` user-command available, which opens the
-floating Vimatrix window according to the `window.general` settings in the
+floating Vimatrix window according to the `window` settings in the
 config.
 
 You can keymap it if you want, e.g:
@@ -475,20 +476,15 @@ Configure the `auto_activation` table in the config to your liking.
 ```
 
 > [!NOTE]  
-> **a note on blend**  
 > Using blend can apply an unwanted dark tone to the background. See
 > `Known Limitations`.
-
-> [!TIP]  
-> When setting the blend property of a window, the colours of the drops might
-> not display correctly. Setting a blend value of 1 in the `highlight_props`
-> section seems to help without affecting other scenarios.
 
 > [!TIP]  
 > When automatically activating Vimatrix on a given filetype, you might also
 > want to configure Vimatrix window settings by file-type in the
 > `window.by_filetype` section of the config. Here you can set `blend`
-> (transparency), `background`, and `zindex` (handle with care).
+> (transparency), `background`, `zindex` (handle with care), and configure a
+> callback that tells vimatrix to ignore particular areas of the window.
 
 > [!TIP]  
 > Find the `filetype` of the file you want to include, e.g. your neovim
@@ -500,8 +496,7 @@ Configure the `auto_activation` table in the config to your liking.
 I have tested and attempted to optimize Vimatrix.nvim for CPU and memory usage.
 
 I have found no memory-leaks and, unless you start stacking Vimatrix windows in
-multiple neovim instances, I found the CPU usage to be unobtrusive, given its
-activity.
+multiple neovim instances, I found the CPU usage to be unobtrusive.
 
 On my system (ryzen 7 7840U) I see a ~5-7% overall CPU usage increase when
 running the recommended settings for matrix reproduction on a 1440p monitor with
@@ -563,8 +558,8 @@ cool stuff, feel free to open a feature request in the issues section.
 
 ### Terminal and Command-Line windows
 
-By default, the screensaver functionality is blocked when the active buffer is
-an open terminal or command-line window.
+By default, the screensaver functionality is blocked when switching to `TERMINAL`
+or `COMMAND` mode.
 
 This can be undone by setting the `auto_activation.screensaver.block_on_term`
 and/or `.block_on_cmd_line` to false. However, do be aware of the following,
