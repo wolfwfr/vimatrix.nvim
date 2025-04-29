@@ -17,6 +17,7 @@ function M.setup(props)
 	vim.defer_fn(function()
 		local stop_events = {}
 		local start_events = {}
+		local ignore_modes = {}
 
 		if not config.ignore_focus then
 			table.insert(stop_events, "FocusLost")
@@ -26,6 +27,8 @@ function M.setup(props)
 		if config.block_on_term then
 			table.insert(stop_events, "TermEnter")
 			table.insert(start_events, "TermLeave")
+			table.insert(ignore_modes, "t")
+			table.insert(ignore_modes, "nt")
 		end
 
 		if config.block_on_cmd_line then
@@ -33,6 +36,7 @@ function M.setup(props)
 			table.insert(stop_events, "CmdlineEnter")
 			table.insert(start_events, "CmdwinLeave")
 			table.insert(start_events, "CmdwinLeave")
+			table.insert(ignore_modes, "c")
 		end
 
 		if #stop_events > 0 then
@@ -45,6 +49,10 @@ function M.setup(props)
 			})
 			vim.api.nvim_create_autocmd(start_events, {
 				callback = function()
+					local m = vim.api.nvim_get_mode().mode
+					if vim.tbl_contains(ignore_modes, m) then
+						return
+					end
 					timer.start(timeout * 1000, props.callback)
 				end,
 			})
@@ -53,12 +61,7 @@ function M.setup(props)
 		vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "ModeChanged", "InsertCharPre" }, {
 			callback = function()
 				local m = vim.api.nvim_get_mode().mode
-
-				if config.block_on_term and (m == "t" or m == "nt") then
-					return
-				end
-
-				if config.block_on_cmd_line and m == "c" then
+				if vim.tbl_contains(ignore_modes, m) then
 					return
 				end
 
