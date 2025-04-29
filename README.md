@@ -52,7 +52,7 @@ Install the plugin with your preferred package manager:
       ignore_focus = false,
       block_on_term = true,
       block_on_cmd_line = true,
-		},
+    },
     on_filetype = {},
   },
   window = {
@@ -70,25 +70,25 @@ Install the plugin with your preferred package manager:
       -- },
     },
   },
-  droplet = {
+    droplet = {
     max_size_offset = 5,
     timings = {
       max_fps = 25,
-      fps_variance = 2,
-      glitch_fps_divider = 5,
+      fps_variance = 3,
+      glitch_fps_divider = 12,
       max_timeout = 200,
       local_glitch_frame_sharing = false,
-      global_glitch_frame_sharing = false,
+      global_glitch_frame_sharing = true,
     },
     random = {
       body_to_tail = 50,
-      head_to_glitch = 150,
+      head_to_glitch = 20,
       head_to_tail = 50,
       kill_head = 150,
       new_head = 30,
     },
   },
-  colourscheme = "green",
+  colourscheme = "matrix",
   highlight_props = {
     bold = true,
     blend = 1, -- quickfix for loss of highlight contrast with window blend;
