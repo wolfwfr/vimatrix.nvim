@@ -7,11 +7,17 @@ local buffer = require("vimatrix.window")
 
 local M = {}
 
-local state = {
-	lanes = {},
-	bufid = 0,
-	extmarks = {},
-}
+local state = {}
+
+local function reset_state()
+	state = {
+		lanes = {},
+		bufid = 0,
+		extmarks = {},
+	}
+end
+
+reset_state()
 
 --- @param n integer number of spaces
 local space = function(n)
@@ -126,6 +132,8 @@ local function update_lanes()
 end
 
 M.rain = function()
+	reset_state()
+
 	math.randomseed(os.time())
 
 	require("vimatrix.colours.provider").Init(config.colourscheme, config.highlight_props)
