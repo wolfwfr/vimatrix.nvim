@@ -1,7 +1,11 @@
+![2025-04-28_16-04-1745850986](https://github.com/user-attachments/assets/dc1c7ff7-c63b-453c-9c3e-397e629103a7)
+
 # 🍃 vimatrix.nvim 🍃
 
 Configurable digital rain simulator for neovim, that can act as a screensaver or
 run automatically on particular files.
+
+[vimatrix.webm](https://github.com/user-attachments/assets/8d3d64f6-ed09-47eb-8230-51109df3658b)
 
 **WARNING: vimatrix.nvim may cause discomfort and seizures in people with
 photosensitive epilepsy. User discretion is advised.**
@@ -197,6 +201,17 @@ other:
 
 ### Options
 
+![2025-04-28_18-04-1745857562](https://github.com/user-attachments/assets/49ab7676-003b-4fac-a31d-aa4ac7026c41)
+![2025-04-28_16-04-1745850986](https://github.com/user-attachments/assets/6d020b2d-ec85-482f-a041-ebb74bf87c7d)
+![2025-04-28_17-04-1745853567](https://github.com/user-attachments/assets/89240bca-4a9c-470b-87c6-9b217783c67d)
+![2025-04-28_17-04-1745853786](https://github.com/user-attachments/assets/a98cd29d-d729-4bd7-b53b-f14f65b34a5b)
+![2025-04-28_17-04-1745853834](https://github.com/user-attachments/assets/e3f62675-9410-4582-aa48-cd7501725769)
+![2025-04-28_17-04-1745854069](https://github.com/user-attachments/assets/1bc1d659-037b-42ce-b5bf-40db51cea73a)
+![2025-04-28_17-04-1745853911](https://github.com/user-attachments/assets/eaad5590-2dc6-45f5-9d0c-cb1199c526a7)
+![2025-04-28_17-04-1745854366](https://github.com/user-attachments/assets/5c9351f1-d294-4314-be6a-54ae078ab682)
+![2025-04-28_17-04-1745854340](https://github.com/user-attachments/assets/3a79e071-e0f1-4413-b791-64851f314adb)
+
+
 #### 🎨 Colours
 
 Vimatrix.nvim supports multiple built-in colourschemes, but can also be
@@ -389,6 +404,8 @@ ignore on your dashboard page.
 ```
 
 which allows for the following effect:
+
+![2025-04-28_22-04-1745871395](https://github.com/user-attachments/assets/d6625879-4209-4630-aac5-3aa8e823952a)
 
 ## 🚀 Usage
 
