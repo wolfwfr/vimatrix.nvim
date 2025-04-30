@@ -9,6 +9,10 @@ end
 
 ---@param props? vx.vimatrix_runner_props
 local rain = function(props)
+	if require("vimatrix.window").is_open() then
+		return
+	end
+
 	local events = { "CursorMoved", "CursorMovedI", "ModeChanged", "InsertCharPre" }
 	local _ = props and props.focus_listener and table.insert(events, "FocusLost") or nil
 

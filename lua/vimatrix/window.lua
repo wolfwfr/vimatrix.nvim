@@ -43,6 +43,11 @@ local function reveal_cursor()
 end
 
 ---@return boolean
+function M.is_open()
+	return M.bufid ~= nil
+end
+
+---@return boolean
 function M.open_overlay()
 	M.old_buffer = vim.api.nvim_get_current_buf()
 	local filetype = vim.bo[M.old_buffer].filetype
@@ -99,6 +104,8 @@ function M.undo()
 		ctermbg = M.old_fl_hl.cterm and M.old_fl_hl.cterm.background,
 		ctermfg = M.old_fl_hl.cterm and M.old_fl_hl.cterm.foreground,
 	})
+	M.bufid = nil
+	M.winid = nil
 end
 
 -- NOTE: thanks Folke, your code is awesome
