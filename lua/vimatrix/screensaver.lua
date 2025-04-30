@@ -43,7 +43,7 @@ function M.setup(props)
 			vim.api.nvim_create_autocmd(stop_events, {
 				callback = function()
 					timer.stop()
-					package.loaded["timer"] = nil
+					package.loaded["vimatrix.timer"] = nil
 					timer = require("vimatrix.timer")
 				end,
 			})
@@ -64,10 +64,17 @@ function M.setup(props)
 				if vim.tbl_contains(ignore_modes, m) then
 					return
 				end
-
 				timer.reset(timeout * 1000, props.callback)
 			end,
 		})
+
+		if config.ignore_focus then -- cannot start timer immediately and respect focus, because I cannot seem to obtain focus state outside of catching events
+			local m = vim.api.nvim_get_mode().mode
+			if vim.tbl_contains(ignore_modes, m) then
+				return
+			end
+			timer.start(timeout * 1000, props.callback)
+		end
 	end, config.setup_deferral * 1000)
 end
 
