@@ -59,7 +59,7 @@ Install the plugin with your preferred package manager:
   window = {
     general = {
       background = "#000000", --black
-			border = "none",
+      border = "none",
       blend = 0,
       zindex = 10,
       ignore_cells = nil,
