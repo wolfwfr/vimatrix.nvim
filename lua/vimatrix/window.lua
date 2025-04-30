@@ -49,6 +49,7 @@ function M.open_overlay()
 	local blend = (config.by_filetype[filetype] or config.general).blend
 	local background = (config.by_filetype[filetype] or config.general).background
 	local zindex = (config.by_filetype[filetype] or config.general).zindex
+	local border = (config.by_filetype[filetype] or config.general).border
 
 	local id = vim.api.nvim_get_hl_id_by_name("NormalFloat")
 	M.old_fl_hl = vim.api.nvim_get_hl(0, { id = id })
@@ -70,6 +71,7 @@ function M.open_overlay()
 		zindex = zindex,
 		style = "minimal",
 		noautocmd = true,
+		border = border,
 	})
 	vim.api.nvim_win_set_hl_ns(M.winid, colours.ns_id)
 	vim.api.nvim_set_hl(colours.ns_id, "NormalFloat", { bg = background })

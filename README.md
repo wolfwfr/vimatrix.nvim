@@ -59,6 +59,7 @@ Install the plugin with your preferred package manager:
   window = {
     general = {
       background = "#000000", --black
+			border = "none",
       blend = 0,
       zindex = 10,
       ignore_cells = nil,
@@ -156,6 +157,7 @@ other:
 
 ---@class vx.window_props
 ---@field background string hex-code colour for window background; empty string will not set a custom background
+---@field border string window option to override default window borders
 ---@field blend integer determines the blend (i.e.) transparency property of the window; see vim.api.keyset.win_config
 ---@field zindex integer zindex of the floating vimatrix window; see vim.api.keyset.win_config; 1000 seems to hide every other window underneath it but this includes messages and terminal applications from which vimatrix is not cancelled.
 ---@field ignore_cells? function(integer, integer, integer) callback function that accepts parameters (old_buffer_id, line, column) and returns a boolean that determines if printing to that cell is allowed.
@@ -211,7 +213,6 @@ other:
 ![2025-04-28_17-04-1745853911](https://github.com/user-attachments/assets/eaad5590-2dc6-45f5-9d0c-cb1199c526a7)
 ![2025-04-28_17-04-1745854366](https://github.com/user-attachments/assets/5c9351f1-d294-4314-be6a-54ae078ab682)
 ![2025-04-28_17-04-1745854340](https://github.com/user-attachments/assets/3a79e071-e0f1-4413-b791-64851f314adb)
-
 
 #### 🎨 Colours
 
@@ -342,8 +343,7 @@ The config determines the speeds, the speed variance, the chance of droplets
 forming or dying, the chance of glitching characters appearing, how frequently
 they change and whether or not they change in sync.
 
-So good news, you finally found one more plugin that you can configure for
-days.
+So good news, you finally found one more plugin that you can configure for days.
 
 ##### 🍃 Recommended settings for matrix reproduction
 
@@ -427,8 +427,7 @@ close the window or only stop the ticker, respectively.
 ### 🖱 Manual Invocation
 
 Vimatrix.nvim makes the `VimatrixOpen` user-command available, which opens the
-floating Vimatrix window according to the `window` settings in the
-config.
+floating Vimatrix window according to the `window` settings in the config.
 
 You can keymap it if you want, e.g:
 
@@ -558,8 +557,8 @@ cool stuff, feel free to open a feature request in the issues section.
 
 ### Terminal and Command-Line windows
 
-By default, the screensaver functionality is blocked when switching to `TERMINAL`
-or `COMMAND` mode.
+By default, the screensaver functionality is blocked when switching to
+`TERMINAL` or `COMMAND` mode.
 
 This can be undone by setting the `auto_activation.screensaver.block_on_term`
 and/or `.block_on_cmd_line` to false. However, do be aware of the following,
