@@ -17,6 +17,7 @@ local rain = function(props)
 	local _ = props and props.focus_listener and table.insert(events, "FocusLost") or nil
 
 	vim.api.nvim_create_autocmd(events, {
+		once = true,
 		callback = function()
 			stop_ticker()
 			require("vimatrix.window").undo()
