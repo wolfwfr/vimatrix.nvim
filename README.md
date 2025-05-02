@@ -497,9 +497,9 @@ I have tested and attempted to optimize Vimatrix.nvim for CPU and memory usage.
 I have found no memory-leaks and, unless you start stacking Vimatrix windows in
 multiple neovim instances, I found the CPU usage to be unobtrusive.
 
-On my system (ryzen 7 7840U) I see a ~5-7% overall CPU usage increase when
-running the recommended settings for matrix reproduction on a 1440p monitor with
-281 window columns and 76 window lines.
+On my system (ryzen 7 7840U; arch linux 6.14.4-arch1-1; ghostty) I see a ~5-7%
+overall CPU usage increase when running the recommended settings for matrix
+reproduction on a 1440p monitor with 281 window columns and 76 window lines.
 
 Vimatrix.nvim uses the virtual text property of extended marks to print its
 effect, which is a lot more performant than printing actual text to a buffer.
