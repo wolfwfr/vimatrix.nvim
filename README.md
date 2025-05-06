@@ -2,8 +2,9 @@
 
 # 🍃 vimatrix.nvim 🍃
 
-Configurable digital rain simulator for neovim, that can act as a screensaver or
-run automatically on files of your choosing.
+Configurable digital rain simulator for neovim. Recreate the famous visual
+effect from "The Matrix" right in your editor. Comes with screensaver
+functionality and dashboard compatibility.
 
 [vimatrix.webm](https://github.com/user-attachments/assets/8d3d64f6-ed09-47eb-8230-51109df3658b)
 
@@ -16,8 +17,8 @@ This was a toy project that I started as a means for getting more familiar with
 lua and the nvim api.
 
 Thanks to the authors of [neo](https://github.com/st3w/neo) and
-[drop](https://github.com/folke/drop.nvim) and obviously the matrix franchise
-for inspiring this plugin!
+[drop.nvim](https://github.com/folke/drop.nvim) and obviously the matrix
+franchise for inspiring this plugin!
 
 ## ⚡️ Requirements
 
