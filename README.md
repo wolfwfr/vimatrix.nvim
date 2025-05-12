@@ -1,10 +1,22 @@
+<div align="center">
+  <h1>🍃 vimatrix.nvim 🍃</h1>
+</div>
+
+<div align="center">
+  <p>
+    Configurable digital rain simulator for neovim. <br/>
+    Recreate the famous visual effect from "The Matrix" right in your editor. <br/>
+    Comes with screensaver functionality and dashboard compatibility.
+  </p>
+</div>
+
+<div align="center">
+
+[![Neovim](https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white)](https://neovim.io/)
+
+</div>
+
 ![2025-04-28_16-04-1745850986](https://github.com/user-attachments/assets/dc1c7ff7-c63b-453c-9c3e-397e629103a7)
-
-# 🍃 vimatrix.nvim 🍃
-
-Configurable digital rain simulator for neovim. Recreate the famous visual
-effect from "The Matrix" right in your editor. Comes with screensaver
-functionality and dashboard compatibility.
 
 [vimatrix.webm](https://github.com/user-attachments/assets/8d3d64f6-ed09-47eb-8230-51109df3658b)
 
