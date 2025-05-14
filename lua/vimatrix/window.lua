@@ -92,20 +92,22 @@ function M.open_overlay()
 end
 
 function M.undo()
-	reveal_cursor()
-	pcall(vim.api.nvim_win_close, M.winid, true)
-	vim.api.nvim_set_hl(colours.ns_id, "NormalFloat", {
-		bg = M.old_fl_hl.bg,
-		fg = M.old_fl_hl.fg,
-		sp = M.old_fl_hl.sp,
-		default = M.old_fl_hl.default,
-		link = M.old_fl_hl.link,
-		blend = M.old_fl_hl.blend,
-		ctermbg = M.old_fl_hl.cterm and M.old_fl_hl.cterm.background,
-		ctermfg = M.old_fl_hl.cterm and M.old_fl_hl.cterm.foreground,
-	})
-	M.bufid = nil
-	M.winid = nil
+	vim.schedule(function()
+		reveal_cursor()
+		pcall(vim.api.nvim_win_close, M.winid, true)
+		vim.api.nvim_set_hl(colours.ns_id, "NormalFloat", {
+			bg = M.old_fl_hl.bg,
+			fg = M.old_fl_hl.fg,
+			sp = M.old_fl_hl.sp,
+			default = M.old_fl_hl.default,
+			link = M.old_fl_hl.link,
+			blend = M.old_fl_hl.blend,
+			ctermbg = M.old_fl_hl.cterm and M.old_fl_hl.cterm.background,
+			ctermfg = M.old_fl_hl.cterm and M.old_fl_hl.cterm.foreground,
+		})
+		M.bufid = nil
+		M.winid = nil
+	end)
 end
 
 -- NOTE: thanks Folke, your code is awesome
