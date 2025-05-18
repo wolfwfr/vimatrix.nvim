@@ -3,45 +3,35 @@ local uv = vim.uv or vim.loop
 ---@class vx.timer
 local M = {}
 
-local state = {
-	stop_timer = false,
-}
 M.timer = uv.new_timer()
 
+local state = {
+	stopped = false,
+}
+
 function M.stop()
-	state.stop_timer = true
+	state.stopped = true
+	M.timer:stop()
+	M.timer:close()
+	M.timer = uv.new_timer()
 end
 
----@return boolean
-local function should_stop()
-	return state.stop_timer
+function M.has_stopped()
+	return state.stopped
 end
 
 ---@param timeout integer milliseconds
 ---@param cb function callback function
 function M.start(timeout, cb)
-	state.stop_timer = false
-	M.timer:start(timeout, 0, function()
-		if should_stop() then
-			M.timer:stop()
-			return
-		end
-		cb()
-	end)
+	state.stopped = false
+	M.timer:start(timeout, 0, cb)
 end
 
 function M.reset(timeout, cb)
-	state.stop_timer = false
 	if M.timer:is_active() then
-		M.timer:stop()
+		M.stop()
 	end
-	M.timer:start(timeout, 0, function()
-		if should_stop() then
-			M.timer:stop()
-			return
-		end
-		cb()
-	end)
+	M.start(timeout, cb)
 end
 
 return M

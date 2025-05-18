@@ -11,6 +11,9 @@ M.timer = uv.new_timer()
 
 function M.stop()
 	state.stop_ticker = true
+	M.timer:stop()
+	M.timer:close()
+	M.timer = uv.new_timer()
 end
 
 ---@return boolean
@@ -21,7 +24,6 @@ local function should_stop(max)
 
 	state.counter = state.counter + 1
 	if max and state.counter > max then
-		print("stopped")
 		state.stop_ticker = true
 	end
 
@@ -36,7 +38,7 @@ function M.start(interval, cb, max)
 	state.counter = 0
 	M.timer:start(0, interval, function()
 		if should_stop(max) then
-			M.timer:stop()
+			M.stop()
 			return
 		end
 		cb()

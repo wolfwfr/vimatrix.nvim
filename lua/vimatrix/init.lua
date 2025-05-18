@@ -1,63 +1,42 @@
-local M = {}
+local config = require("vimatrix.config")
 
-local function stop_ticker()
-	require("vimatrix.ticker").stop()
-end
+local M = {}
 
 ---@class vx.vimatrix_runner_props
 ---@field focus_listener? boolean
 
 ---@param props? vx.vimatrix_runner_props
 local rain = function(props)
-	if require("vimatrix.window").is_open() then
-		return
-	end
-
 	local events = { "CursorMoved", "CursorMovedI", "ModeChanged", "InsertCharPre" }
 	local _ = props and props.focus_listener and table.insert(events, "FocusLost") or nil
 
-	vim.api.nvim_create_autocmd(events, {
-		once = true,
-		callback = function()
-			stop_ticker()
-			require("vimatrix.window").undo()
-		end,
-	})
-
-	require("vimatrix.orchestrator").rain()
+	require("vimatrix.orchestrator").rain(events)
 end
 
 local function auto_activate_after_timeout()
-	local cb = vim.schedule_wrap(function()
-		rain({
-			focus_listener = true,
-		})
-	end)
+	local cb = function()
+		rain({ focus_listener = true })
+	end
 	require("vimatrix.screensaver").setup({ callback = cb })
 end
 
 local function auto_activate_on_filetype()
-	local cb = rain
-	require("vimatrix.file_activation").activate_on_file({ callback = cb })
+	require("vimatrix.file_activation").activate_on_file({ callback = rain })
 end
 
 local function create_user_commands()
-	vim.api.nvim_create_user_command("VimatrixOpen", function()
-		rain()
-	end, {})
+	vim.api.nvim_create_user_command("VimatrixOpen", rain, {})
 
-	vim.api.nvim_create_user_command("VimatrixStop", function()
-		stop_ticker()
-	end, {})
+	vim.api.nvim_create_user_command("VimatrixStop", require("vimatrix.ticker").stop, {})
 
 	vim.api.nvim_create_user_command("VimatrixClose", function()
-		stop_ticker()
+		require("vimatrix.ticker").stop()
 		require("vimatrix.window").undo()
 	end, {})
 end
 
 function M.setup(opts)
-	require("vimatrix.config").setup(opts)
+	config.setup(opts)
 
 	create_user_commands()
 	auto_activate_on_filetype()
