@@ -7,6 +7,7 @@ local M = {}
 ---
 ---@param props vx.screensaver.props
 function M.setup(props)
+	local cb = vim.schedule_wrap(props.callback)
 	local timeout = config.timeout
 	if not timeout or timeout < 1 then
 		return
@@ -39,41 +40,32 @@ function M.setup(props)
 			table.insert(ignore_modes, "c")
 		end
 
-		if #stop_events > 0 then
-			vim.api.nvim_create_autocmd(stop_events, {
-				callback = function()
-					timer.stop()
-					package.loaded["vimatrix.timer"] = nil
-					timer = require("vimatrix.timer")
-				end,
-			})
-			vim.api.nvim_create_autocmd(start_events, {
-				callback = function()
-					local m = vim.api.nvim_get_mode().mode
-					if vim.tbl_contains(ignore_modes, m) then
-						return
-					end
-					timer.start(timeout * 1000, props.callback)
-				end,
-			})
-		end
-
-		vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "ModeChanged", "InsertCharPre" }, {
-			callback = function()
-				local m = vim.api.nvim_get_mode().mode
-				if vim.tbl_contains(ignore_modes, m) then
-					return
-				end
-				timer.reset(timeout * 1000, props.callback)
-			end,
-		})
-
-		if config.ignore_focus then -- cannot start timer immediately and respect focus, because I cannot seem to obtain focus state outside of catching events
+		local reset = function()
 			local m = vim.api.nvim_get_mode().mode
 			if vim.tbl_contains(ignore_modes, m) then
 				return
 			end
-			timer.start(timeout * 1000, props.callback)
+			timer.reset(timeout * 1000, cb)
+		end
+
+		if #stop_events > 0 then
+			vim.api.nvim_create_autocmd(stop_events, {
+				callback = timer.stop,
+			})
+		end
+
+		if #start_events > 0 then
+			vim.api.nvim_create_autocmd(start_events, {
+				callback = reset,
+			})
+		end
+
+		vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "ModeChanged", "InsertCharPre" }, {
+			callback = reset,
+		})
+
+		if config.ignore_focus then -- cannot start timer immediately and respect focus, because I cannot seem to obtain focus state outside of catching events
+			reset()
 		end
 	end, config.setup_deferral * 1000)
 end

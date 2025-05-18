@@ -3,7 +3,7 @@ local coloursets = require("vimatrix.colours.provider")
 local logger = require("vimatrix.errors")
 local ticker = require("vimatrix.ticker")
 local config = require("vimatrix.config").options
-local buffer = require("vimatrix.window")
+local window = require("vimatrix.window")
 
 local M = {}
 
@@ -131,7 +131,27 @@ local function update_lanes()
 	end
 end
 
-M.rain = function()
+---@param cancel_events string[]
+local function setup_cancellation(cancel_events)
+	local function undo()
+		if not window.is_open() then
+			return
+		end
+		ticker.stop()
+		window.undo()
+	end
+
+	vim.api.nvim_create_autocmd(cancel_events, {
+		once = true,
+		callback = undo,
+	})
+end
+
+---@param cancel_events string[]
+M.rain = function(cancel_events)
+	if window.is_open() then
+		return
+	end
 	reset_state()
 
 	math.randomseed(os.time())
@@ -140,16 +160,17 @@ M.rain = function()
 	require("vimatrix.alphabet.provider").init(config.alphabet)
 	require("vimatrix.errors").init(config.logging)
 
-	local ok = require("vimatrix.window").open_overlay()
+	local ok = window.open_overlay()
 	if not ok then
 		-- could not open window
 		return
 	end
 
-	local num_cols = vim.fn.winwidth(buffer.winid)
-	local num_rows = vim.fn.winheight(buffer.winid)
-	state.bufid = buffer.bufid
+	local num_cols = vim.fn.winwidth(window.winid)
+	local num_rows = vim.fn.winheight(window.winid)
+	state.bufid = window.bufid
 
+	setup_cancellation(cancel_events)
 	setup_buffer(num_rows, num_cols)
 	setup_buffer_virt(num_rows, num_cols)
 	setup_lanes(num_rows, num_cols)
