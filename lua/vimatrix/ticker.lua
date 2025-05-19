@@ -9,6 +9,10 @@ local state = {
 }
 M.timer = uv.new_timer()
 
+function M.is_ticking()
+	return not state.stop_ticker
+end
+
 function M.stop()
 	state.stop_ticker = true
 	M.timer:stop()

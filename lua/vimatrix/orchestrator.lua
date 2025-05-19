@@ -141,10 +141,12 @@ local function setup_cancellation(cancel_events)
 		window.undo()
 	end
 
-	vim.api.nvim_create_autocmd(cancel_events, {
-		once = true,
-		callback = undo,
-	})
+	if cancel_events and #cancel_events > 0 then
+		vim.api.nvim_create_autocmd(cancel_events, {
+			once = true,
+			callback = undo,
+		})
+	end
 end
 
 ---@param cancel_events string[]

@@ -95,16 +95,18 @@ function M.undo()
 	vim.schedule(function()
 		reveal_cursor()
 		pcall(vim.api.nvim_win_close, M.winid, true)
-		vim.api.nvim_set_hl(colours.ns_id, "NormalFloat", {
-			bg = M.old_fl_hl.bg,
-			fg = M.old_fl_hl.fg,
-			sp = M.old_fl_hl.sp,
-			default = M.old_fl_hl.default,
-			link = M.old_fl_hl.link,
-			blend = M.old_fl_hl.blend,
-			ctermbg = M.old_fl_hl.cterm and M.old_fl_hl.cterm.background,
-			ctermfg = M.old_fl_hl.cterm and M.old_fl_hl.cterm.foreground,
-		})
+		if M.old_fl_hl then
+			vim.api.nvim_set_hl(colours.ns_id, "NormalFloat", {
+				bg = M.old_fl_hl.bg,
+				fg = M.old_fl_hl.fg,
+				sp = M.old_fl_hl.sp,
+				default = M.old_fl_hl.default,
+				link = M.old_fl_hl.link,
+				blend = M.old_fl_hl.blend,
+				ctermbg = M.old_fl_hl.cterm and M.old_fl_hl.cterm.background,
+				ctermfg = M.old_fl_hl.cterm and M.old_fl_hl.cterm.foreground,
+			})
+		end
 		M.bufid = nil
 		M.winid = nil
 	end)

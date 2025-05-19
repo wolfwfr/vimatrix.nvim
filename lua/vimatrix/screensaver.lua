@@ -1,5 +1,3 @@
-local config = require("vimatrix.config").options.auto_activation.screensaver
-
 local M = {}
 
 ---@class vx.screensaver.props
@@ -7,6 +5,7 @@ local M = {}
 ---
 ---@param props vx.screensaver.props
 function M.setup(props)
+	local config = require("vimatrix.config").options.auto_activation.screensaver
 	local cb = vim.schedule_wrap(props.callback)
 	local timeout = config.timeout
 	if not timeout or timeout < 1 then
