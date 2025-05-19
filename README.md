@@ -104,6 +104,7 @@ Install the plugin with your preferred package manager:
     },
   },
   colourscheme = "matrix",
+  cancellation_keys = { "<Esc>", "q" },
   highlight_props = {
     bold = true,
     blend = 1, -- quickfix for loss of highlight contrast with window blend;
@@ -196,6 +197,7 @@ other:
 ---@field window vx.window settings that relate to the window that vimatrix.nvim opens
 ---@field droplet vx.droplet settings that relate to the droplet lanes
 ---@field colourscheme vimatrix.colour_scheme | string
+---@field cancellation_keys string[] temporary keymaps for cancelling the vimatrix effect; assign an empty table to disable vimatrix keymaps
 ---@field highlight_props? vim.api.keyset.highlight Highlight definition to apply to rendered cells, accepts the following keys:
 --- - bg: color name or "#RRGGBB"
 --- - blend: integer between 0 and 100
@@ -428,14 +430,21 @@ which allows for the following effect:
 Vimatrix.nvim generally functions like a screensaver.
 
 You can cancel the effect by `moving the cursor`, `inserting text`, or
-`changing modes`.
+`changing modes`. By default, the `<Esc>` and `q` keys are also configured for
+cancellation.
 
-There is an exception when terminal or command-line windows are open and some of
-the default screensaver settings are altered (see `Known Limitations`)
+These keymaps temporarily override existing keymaps while vimatrix is running
+and restore the original keymaps (if present) when vimatrix closes. The keys
+themselves are configurable.
 
 Vimatrix.nvim also exposes the `VimatrixClose` and `VimatrixStop` user-commands,
 that can be called (if the regular means do not work) to stop the ticker and
 close the window or only stop the ticker, respectively.
+
+> !NOTE  
+> There is an exception to the normal cancellation procedures when terminal or
+> command-line windows are open and some of the default screensaver settings are
+> altered (see `Known Limitations`)
 
 ### 🖱 Manual Invocation
 

@@ -131,14 +131,29 @@ local function update_lanes()
 	end
 end
 
+-- setup_cancellation sets up cancellation events and -keys.
+-- These events and keys will call the cancellation function.
+-- Temporary, buffer-local keymaps are created for the cancellation keys.
+-- These could override existing buffer-local keymaps. Therefore, the setup makes a local
+-- copy of the existing keymaps that will be overridden and restores them during
+-- cancellation.
+
 ---@param cancel_events string[]
-local function setup_cancellation(cancel_events)
+---@param cancel_keys string[]
+local function setup_cancellation(cancel_events, cancel_keys)
+	local utils = require("vimatrix.utils")
+	local old_buffer = window.old_buffer
+
+	local maps = utils.keymaps_list_buf(old_buffer, cancel_keys)
+
 	local function undo()
 		if not window.is_open() then
 			return
 		end
 		ticker.stop()
 		window.undo()
+		utils.keymaps_restore_buf(old_buffer, maps)
+		vim.api.nvim_exec_autocmds("User", { pattern = "VimatrixUndo" })
 	end
 
 	if cancel_events and #cancel_events > 0 then
@@ -147,10 +162,13 @@ local function setup_cancellation(cancel_events)
 			callback = undo,
 		})
 	end
+
+	utils.keymaps_set_all_buf(old_buffer, cancel_keys, undo)
 end
 
 ---@param cancel_events string[]
-M.rain = function(cancel_events)
+---@param cancel_keys string[]
+M.rain = function(cancel_events, cancel_keys)
 	if window.is_open() then
 		return
 	end
@@ -172,7 +190,7 @@ M.rain = function(cancel_events)
 	local num_rows = vim.fn.winheight(window.winid)
 	state.bufid = window.bufid
 
-	setup_cancellation(cancel_events)
+	setup_cancellation(cancel_events, cancel_keys)
 	setup_buffer(num_rows, num_cols)
 	setup_buffer_virt(num_rows, num_cols)
 	setup_lanes(num_rows, num_cols)

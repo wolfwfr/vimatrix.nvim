@@ -47,6 +47,7 @@ local M = {}
 ---@field window vx.window settings that relate to the window that vimatrix.nvim opens
 ---@field droplet vx.droplet settings that relate to the droplet lanes
 ---@field colourscheme vimatrix.colour_scheme | string
+---@field cancellation_keys string[] temporary keymaps for cancelling the vimatrix effect; assign an empty table to disable vimatrix keymaps
 ---@field highlight_props? vim.api.keyset.highlight Highlight definition to apply to rendered cells, accepts the following keys:
 --- - bg: color name or "#RRGGBB"
 --- - blend: integer between 0 and 100
@@ -108,6 +109,7 @@ local defaults = {
 		},
 	},
 	colourscheme = "matrix",
+	cancellation_keys = { "<Esc>", "q" },
 	highlight_props = {
 		bold = true,
 		blend = 1, -- quickfix for loss of highlight contrast with window blend;

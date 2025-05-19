@@ -59,6 +59,15 @@ function M.setup(props)
 			})
 		end
 
+		vim.api.nvim_create_autocmd("User", {
+			pattern = "VimatrixUndo",
+			callback = function()
+				if not require("vimatrix.timer").has_stopped() then -- prevents unintended resets if event arrives while screensaver timer is not ticking
+					reset()
+				end
+			end,
+		})
+
 		vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "ModeChanged", "InsertCharPre" }, {
 			callback = reset,
 		})
