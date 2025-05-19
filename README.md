@@ -441,7 +441,7 @@ Vimatrix.nvim also exposes the `VimatrixClose` and `VimatrixStop` user-commands,
 that can be called (if the regular means do not work) to stop the ticker and
 close the window or only stop the ticker, respectively.
 
-> !NOTE  
+> [!NOTE]  
 > There is an exception to the normal cancellation procedures when terminal or
 > command-line windows are open and some of the default screensaver settings are
 > altered (see `Known Limitations`)
