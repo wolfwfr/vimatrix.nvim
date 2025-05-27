@@ -104,7 +104,6 @@ Install the plugin with your preferred package manager:
     },
   },
   colourscheme = "matrix",
-  cancellation_keys = { "<Esc>", "q" },
   highlight_props = {
     bold = true,
     blend = 1, -- quickfix for loss of highlight contrast with window blend;
