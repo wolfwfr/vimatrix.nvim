@@ -10,7 +10,7 @@ local rain = function(props)
 	local events = { "CursorMoved", "CursorMovedI", "ModeChanged", "InsertCharPre" }
 	local _ = props and props.focus_listener and table.insert(events, "FocusLost") or nil
 
-	require("vimatrix.orchestrator").rain(events, config.options.cancellation_keys)
+	require("vimatrix.orchestrator").rain(events, config.options.keys.cancellation)
 end
 
 local function auto_activate_after_timeout()

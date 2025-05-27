@@ -42,12 +42,14 @@ local M = {}
 ---@field timings vx.lane_timings the timings of changes on screen
 ---@field random vx.random the chances of random events; each is a chance of 1 in x
 
+---@class vx.keys
+---@field cancellation string[] temporary keymaps for cancelling the vimatrix effect; assign an empty table to disable vimatrix keymaps
+
 ---@class vx.config
 ---@field auto_activation vx.auto_activation --settings that relate to automatic activation of vimatrix.nvim
 ---@field window vx.window settings that relate to the window that vimatrix.nvim opens
 ---@field droplet vx.droplet settings that relate to the droplet lanes
 ---@field colourscheme vimatrix.colour_scheme | string
----@field cancellation_keys string[] temporary keymaps for cancelling the vimatrix effect; assign an empty table to disable vimatrix keymaps
 ---@field highlight_props? vim.api.keyset.highlight Highlight definition to apply to rendered cells, accepts the following keys:
 --- - bg: color name or "#RRGGBB"
 --- - blend: integer between 0 and 100
@@ -63,6 +65,7 @@ local M = {}
 --- - reverse: boolean
 ---@field alphabet vx.alphabet_props
 ---@field logging vx.log.props error logging settings; BEWARE: errors can ammass quickly if something goes wrong
+---@field keys vx.keys
 local defaults = {
 	auto_activation = {
 		screensaver = {
@@ -109,7 +112,6 @@ local defaults = {
 		},
 	},
 	colourscheme = "matrix",
-	cancellation_keys = { "<Esc>", "q" },
 	highlight_props = {
 		bold = true,
 		blend = 1, -- quickfix for loss of highlight contrast with window blend;
@@ -124,6 +126,9 @@ local defaults = {
 	logging = {
 		print_errors = false,
 		log_level = vim.log.levels.DEBUG,
+	},
+	keys = {
+		cancellation = { "<Esc>", "q" },
 	},
 }
 
