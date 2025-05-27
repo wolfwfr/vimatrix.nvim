@@ -119,6 +119,9 @@ Install the plugin with your preferred package manager:
     print_errors = false,
     log_level = vim.log.levels.DEBUG,
   },
+  keys = {
+    cancellation = { "<Esc>", "q" },
+  },
 }
 ```
 
@@ -191,6 +194,9 @@ other:
 ---@field timings vx.lane_timings the timings of changes on screen
 ---@field random vx.random the chances of random events; each is a chance of 1 in x
 
+---@class vx.keys
+---@field cancellation string[] temporary keymaps for cancelling the vimatrix effect; assign an empty table to disable vimatrix keymaps
+
 ---@class vx.config
 ---@field auto_activation vx.auto_activation --settings that relate to automatic activation of vimatrix.nvim
 ---@field window vx.window settings that relate to the window that vimatrix.nvim opens
@@ -211,6 +217,7 @@ other:
 --- - reverse: boolean
 ---@field alphabet vx.alphabet_props
 ---@field logging vx.log.props error logging settings; BEWARE: errors can ammass quickly if something goes wrong
+---@field keys vx.keys
 ```
 
 </details>
@@ -428,14 +435,21 @@ which allows for the following effect:
 Vimatrix.nvim generally functions like a screensaver.
 
 You can cancel the effect by `moving the cursor`, `inserting text`, or
-`changing modes`.
+`changing modes`. By default, the `<Esc>` and `q` keys are also configured for
+cancellation.
 
-There is an exception when terminal or command-line windows are open and some of
-the default screensaver settings are altered (see `Known Limitations`)
+These keymaps temporarily override existing ones while vimatrix is running and
+restore the original keymaps (if present) when vimatrix closes. The keys
+themselves are configurable.
 
 Vimatrix.nvim also exposes the `VimatrixClose` and `VimatrixStop` user-commands,
 that can be called (if the regular means do not work) to stop the ticker and
 close the window or only stop the ticker, respectively.
+
+> [!NOTE]  
+> There is an exception to the normal cancellation procedures when terminal or
+> command-line windows are open and some of the default screensaver settings are
+> altered (see `Known Limitations`)
 
 ### 🖱 Manual Invocation
 
