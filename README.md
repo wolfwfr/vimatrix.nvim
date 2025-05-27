@@ -438,8 +438,8 @@ You can cancel the effect by `moving the cursor`, `inserting text`, or
 `changing modes`. By default, the `<Esc>` and `q` keys are also configured for
 cancellation.
 
-These keymaps temporarily override existing keymaps while vimatrix is running
-and restore the original keymaps (if present) when vimatrix closes. The keys
+These keymaps temporarily override existing ones while vimatrix is running and
+restore the original keymaps (if present) when vimatrix closes. The keys
 themselves are configurable.
 
 Vimatrix.nvim also exposes the `VimatrixClose` and `VimatrixStop` user-commands,
