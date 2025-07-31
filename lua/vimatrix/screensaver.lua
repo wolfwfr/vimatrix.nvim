@@ -1,10 +1,16 @@
 local M = {}
 
+local augroup_name = "vimatrix_screensaver"
+local timer = require("vimatrix.timer")
+local enabled = true
+
 ---@class vx.screensaver.props
 ---@field callback function
 ---
 ---@param props vx.screensaver.props
 function M.setup(props)
+	enabled = true
+
 	local config = require("vimatrix.config").options.auto_activation.screensaver
 	local cb = vim.schedule_wrap(props.callback)
 	local timeout = config.timeout
@@ -12,9 +18,13 @@ function M.setup(props)
 		return
 	end
 
-	local timer = require("vimatrix.timer")
+	vim.api.nvim_create_augroup(augroup_name, {})
 
 	vim.defer_fn(function()
+		if not enabled then
+			return
+		end
+
 		local stop_events = {}
 		local start_events = {}
 		local ignore_modes = {}
@@ -50,12 +60,14 @@ function M.setup(props)
 		if #stop_events > 0 then
 			vim.api.nvim_create_autocmd(stop_events, {
 				callback = timer.stop,
+				group = augroup_name,
 			})
 		end
 
 		if #start_events > 0 then
 			vim.api.nvim_create_autocmd(start_events, {
 				callback = reset,
+				group = augroup_name,
 			})
 		end
 
@@ -66,16 +78,24 @@ function M.setup(props)
 					reset()
 				end
 			end,
+			group = augroup_name,
 		})
 
 		vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "ModeChanged", "InsertCharPre" }, {
 			callback = reset,
+			group = augroup_name,
 		})
 
 		if config.ignore_focus then -- cannot start timer immediately and respect focus, because I cannot seem to obtain focus state outside of catching events
 			reset()
 		end
 	end, config.setup_deferral * 1000)
+end
+
+function M.stop()
+	vim.api.nvim_del_augroup_by_name(augroup_name)
+	enabled = false
+	timer.stop()
 end
 
 return M

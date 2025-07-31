@@ -33,6 +33,9 @@ local function create_user_commands()
 		require("vimatrix.ticker").stop()
 		require("vimatrix.window").undo()
 	end, {})
+
+	vim.api.nvim_create_user_command("VimatrixScreenSaverStop", require("vimatrix.screensaver").stop, {})
+	vim.api.nvim_create_user_command("VimatrixScreenSaverRestart", auto_activate_after_timeout, {})
 end
 
 function M.setup(opts)
