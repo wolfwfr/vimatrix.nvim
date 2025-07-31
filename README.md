@@ -477,6 +477,10 @@ Configure the `auto_activation.screensaver` table in the config to your liking.
 The screensaver is configured to activate only on neovim instances that are in
 focus, to prevent system resources from being spent on background instances.
 
+The screensaver functionality can be temporarily disabled in your active session
+with the `VimatrixScreenSaverStop` user-command. Call
+`VimatrixScreenSaverRestart` to re-enable it.
+
 The screensaver does have known limitations and workarounds, see
 `Known Limitations`.
 
