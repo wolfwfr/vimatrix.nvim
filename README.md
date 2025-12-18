@@ -25,8 +25,8 @@ photosensitive epilepsy. User discretion is advised.**
 
 ## ❔ Why
 
-This was a toy project that I started as a means for getting more familiar with
-lua and the nvim api.
+This was a project that I started as a means for getting more familiar with lua
+and the nvim api.
 
 Thanks to the authors of [neo](https://github.com/st3w/neo) and
 [drop.nvim](https://github.com/folke/drop.nvim) and obviously the matrix
@@ -254,14 +254,14 @@ configured with custom colours.
 
 </details>
 
-##### Apply a built-in colourscheme
+##### Apply a Built-in Colourscheme
 
 ```lua
 -- e.g.
 colourscheme = "pink" -- string
 ```
 
-##### Apply a custom colourscheme
+##### Apply a Custom Colourscheme
 
 ```lua
 -- e.g.
@@ -286,7 +286,7 @@ This colourshift only happens when `glitch_bright` is not empty.
 
 </details>
 
-#### 🔤 alphabet
+#### 🔤 Alphabet
 
 Vimatrix.nvim supports multiple built-in symbols and alphabets, but can also be
 configured with custom ones.
@@ -326,7 +326,7 @@ and the following symbols:
 > characters, which is not perfect for visual consistency, but it still looks
 > pretty cool. Affected alphabets are arabic and sanskrit.
 
-##### Apply built-in alphabets
+##### Apply Built-in Alphabets
 
 ```lua
 -- e.g.
@@ -340,7 +340,7 @@ and the following symbols:
 }
 ```
 
-##### apply custom alphabets
+##### Apply Custom Alphabets
 
 ```lua
 -- e.g.
@@ -365,7 +365,7 @@ they change and whether or not they change in sync.
 
 So good news, you finally found one more plugin that you can configure for days.
 
-##### 🍃 Recommended settings for matrix reproduction
+##### 🍃 Recommended Settings for Matrix Reproduction
 
 ```lua
 -- Based on the first scene with Neo and Cypher.
@@ -392,7 +392,7 @@ So good news, you finally found one more plugin that you can configure for days.
 }
 ```
 
-#### 🪟 window settings
+#### 🪟 Window Settings
 
 Vimatrix.nvim allows you to configure some aspects of the window being drawn and
 what happens within it.
@@ -570,7 +570,7 @@ droplet = {
 > manage the amount of rendering. This is also quite effective at reducing CPU
 > usage.
 
-## 🛣 roadmap
+## 🛣 Roadmap
 
 As this was a toy project, I'm not making any promises, but I have been thinking
 about the following features. If you would like to express your interest in one
@@ -586,7 +586,7 @@ cool stuff, feel free to open a feature request in the issues section.
 
 ## ⚠️ Known Limitations
 
-### Terminal and Command-Line windows
+### Terminal and Command-Line Windows
 
 By default, the screensaver functionality is blocked when switching to
 `TERMINAL` or `COMMAND` mode.
@@ -625,7 +625,22 @@ In practice I have not found this scenario to to occur to me as I generally
 don't leave neovim terminal applications unattended for extended periods of
 time.
 
-### blend
+### Vim Unsafe State
+
+When Vim is awaiting user input, it enters an 'unsafe' state (see
+`:h SafeState`), during which (I have observed) scheduled calls, including
+autocommands, do not execute. The vimatrix screensaver depends on autocommands
+to reset or stop the timer that activates it through a callback. Consequently,
+the screensaver callback can be unintentionally scheduled in this state,
+potentially leading to activation or scheduling in unfocused Neovim sessions.
+
+To prevent unintended activation, the vimatrix screensaver is neither scheduled
+nor executed when the timer expires in an 'unsafe' state. This does mean that,
+if a focused Neovim session remains in this state, the screensaver will not
+activate, which is generally preferable since the screensaver would not take
+effect anyway until user input exits the 'unsafe' state.
+
+### Blend
 
 It appears that there is an
 [open bug](https://github.com/neovim/neovim/issues/18576) in neovim that applies

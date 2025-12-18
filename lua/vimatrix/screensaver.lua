@@ -12,7 +12,23 @@ function M.setup(props)
 	enabled = true
 
 	local config = require("vimatrix.config").options.auto_activation.screensaver
-	local cb = vim.schedule_wrap(props.callback)
+
+	local function cb()
+		-- NOTE: When Vim is in an 'unsafe' state, it awaits user input (see :h SafeState).
+		-- In this state, autocommands do not execute, which can lead to unintentional
+		-- execution of the vimatrix screensaver callback (e.g., in an unfocused window)
+		-- due to missing 'timer.reset' from autocommands. To prevent this,
+		-- the vimatrix screensaver aborts completely if the callback is triggered
+		-- during an 'unsafe' state.
+		if vim.fn.state("S") ~= "" then
+			return
+		end
+
+		vim.schedule(function()
+			props.callback()
+		end)
+	end
+
 	local timeout = config.timeout
 	if not timeout or timeout < 1 then
 		return
