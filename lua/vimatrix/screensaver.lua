@@ -76,8 +76,8 @@ function M.setup(props)
 
 		if config.block_on_cmd_line then
 			table.insert(stop_events, "CmdlineEnter")
-			table.insert(stop_events, "CmdlineEnter")
-			table.insert(start_events, "CmdwinLeave")
+			table.insert(stop_events, "CmdwinEnter")
+			table.insert(start_events, "CmdlineLeave")
 			table.insert(start_events, "CmdwinLeave")
 			table.insert(ignore_modes, "c")
 		end
