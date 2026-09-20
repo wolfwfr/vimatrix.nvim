@@ -4,6 +4,12 @@ local augroup_name = "vimatrix_screensaver"
 local timer = require("vimatrix.timer")
 local enabled = true
 
+-- explicit focus tracking ensures neovim events cannot trigger screensaver
+-- timer resets (or re-enabling) when neovim session is not focused (only
+-- applies when `config.ignore_focus` equals `true`).
+-- Out-of-focus reset events were observed when unfocusing from neotree window.
+local focused = true
+
 ---@class vx.screensaver.props
 ---@field callback function
 ---
@@ -48,6 +54,17 @@ function M.setup(props)
 		if not config.ignore_focus then
 			table.insert(stop_events, "FocusLost")
 			table.insert(start_events, "FocusGained")
+
+			vim.api.nvim_create_autocmd({ "FocusLost" }, {
+				callback = function()
+					focused = false
+				end,
+			})
+			vim.api.nvim_create_autocmd({ "FocusGained" }, {
+				callback = function()
+					focused = true
+				end,
+			})
 		end
 
 		if config.block_on_term then
@@ -59,22 +76,22 @@ function M.setup(props)
 
 		if config.block_on_cmd_line then
 			table.insert(stop_events, "CmdlineEnter")
-			table.insert(stop_events, "CmdlineEnter")
-			table.insert(start_events, "CmdwinLeave")
+			table.insert(stop_events, "CmdwinEnter")
+			table.insert(start_events, "CmdlineLeave")
 			table.insert(start_events, "CmdwinLeave")
 			table.insert(ignore_modes, "c")
 		end
 
 		local reset = function()
 			local m = vim.api.nvim_get_mode().mode
-			if vim.tbl_contains(ignore_modes, m) then
+			if not focused or vim.tbl_contains(ignore_modes, m) then
 				return
 			end
 			timer.reset(timeout * 1000, cb)
 		end
 
 		if #stop_events > 0 then
-			vim.api.nvim_create_autocmd(stop_events, {
+			vim.api.nvim_create_autocmd(stop_events, { -- stop events can sefely operate when not focused; no check
 				callback = timer.stop,
 				group = augroup_name,
 			})
